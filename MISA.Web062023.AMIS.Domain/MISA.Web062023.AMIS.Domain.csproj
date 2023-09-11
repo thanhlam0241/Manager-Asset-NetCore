@@ -1,0 +1,67 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.143" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Resources\Base\Base.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Base.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Department\Department.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Department.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Exception\Exception.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Exception.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\FixedAssetCategory\FixedAssetCategory.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>FixedAssetCategory.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\FixedAsset\FixedAsset.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>FixedAsset.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Base\Base.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Base.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Department\Department.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Department.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Exception\Exception.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Exception.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Exception\Exception.Vi.resx">
+	    <Generator></Generator>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\FixedAsset\FixedAsset.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>FixedAsset.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\FixedAssetCategory\FixedAssetCategory.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>FixedAssetCategory.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+</Project>
