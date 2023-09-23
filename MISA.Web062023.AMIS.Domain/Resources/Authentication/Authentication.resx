@@ -117,16 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="123" xml:space="preserve">
-    <value>Đ</value>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>Không đủ quyền để truy cập tài nguyên</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Xóa thành công {0} dữ liệu.</value>
+  <data name="CredentialFail" xml:space="preserve">
+    <value>Tên đăng nhập/ Số điện thoại/ Gmail không đúng!!!</value>
   </data>
-  <data name="Insert" xml:space="preserve">
-    <value>Tạo mới {0} dữ liệu thành công.</value>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Mật khẩu sai!!!</value>
   </data>
-  <data name="Update" xml:space="preserve">
-    <value>Cập nhật {0} dữ liệu thành công.</value>
+  <data name="LoginFail" xml:space="preserve">
+    <value>Đăng nhập thất bại</value>
+  </data>
+  <data name="LoginSuccess" xml:space="preserve">
+    <value>Đăng nhập thành công</value>
+  </data>
+  <data name="LogoutSuccess" xml:space="preserve">
+    <value>Đăng xuất thành công</value>
+  </data>
+  <data name="NotLogin" xml:space="preserve">
+    <value>Cần đăng nhập để truy cập</value>
   </data>
 </root>

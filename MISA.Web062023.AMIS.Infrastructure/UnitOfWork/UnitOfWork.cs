@@ -179,6 +179,11 @@ namespace MISA.Web062023.AMIS.Infrastructure
         {
             return _connectionString;
         }
+
+        public DbConnection DbConnection()
+        {
+            return new MySqlConnection(_connectionString);
+        }
         #endregion
     }
 }

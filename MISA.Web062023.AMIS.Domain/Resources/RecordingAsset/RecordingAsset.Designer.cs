@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MISA.Web062023.AMIS.Domain.Resources.Base {
+namespace MISA.Web062023.AMIS.Domain.Resources.RecordingAsset {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace MISA.Web062023.AMIS.Domain.Resources.Base {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Base {
+    public class RecordingAsset {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Base() {
+        internal RecordingAsset() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace MISA.Web062023.AMIS.Domain.Resources.Base {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MISA.Web062023.AMIS.Domain.Resources.Base.Base", typeof(Base).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MISA.Web062023.AMIS.Domain.Resources.RecordingAsset.RecordingAsset", typeof(RecordingAsset).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,38 +61,47 @@ namespace MISA.Web062023.AMIS.Domain.Resources.Base {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Đ.
+        ///   Looks up a localized string similar to Tạo mới chứng từ thành công..
         /// </summary>
-        public static string _123 {
+        public static string CreateNewRecording {
             get {
-                return ResourceManager.GetString("123", resourceCulture);
+                return ResourceManager.GetString("CreateNewRecording", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Xóa thành công {0} dữ liệu..
+        ///   Looks up a localized string similar to Tạo mới chứng từ thất bại.
         /// </summary>
-        public static string Delete {
+        public static string CreateNewRecordingFail {
             get {
-                return ResourceManager.GetString("Delete", resourceCulture);
+                return ResourceManager.GetString("CreateNewRecordingFail", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tạo mới {0} dữ liệu thành công..
+        ///   Looks up a localized string similar to Không có tài sản nào được chọn để chứng từ.
         /// </summary>
-        public static string Insert {
+        public static string NoAssetSelect {
             get {
-                return ResourceManager.GetString("Insert", resourceCulture);
+                return ResourceManager.GetString("NoAssetSelect", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cập nhật {0} dữ liệu thành công..
+        ///   Looks up a localized string similar to Không tồn tại tài sản nào ứng với chứng từ id {0} !!.
         /// </summary>
-        public static string Update {
+        public static string NoAssetWithRecording {
             get {
-                return ResourceManager.GetString("Update", resourceCulture);
+                return ResourceManager.GetString("NoAssetWithRecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chứng từ với id {0} không tồn tại !!.
+        /// </summary>
+        public static string RecordingNotExist {
+            get {
+                return ResourceManager.GetString("RecordingNotExist", resourceCulture);
             }
         }
     }

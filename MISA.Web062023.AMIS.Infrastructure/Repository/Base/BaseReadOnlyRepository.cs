@@ -75,6 +75,7 @@ namespace MISA.Web062023.AMIS.Infrastructure
             var param = new DynamicParameters();
             param.Add("@Id", ids);
 
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
             var result = await _unitOfWork.Connection.QueryAsync<TEntity>(sql, param, _unitOfWork.Transaction);
             return result;
         }
@@ -93,6 +94,7 @@ namespace MISA.Web062023.AMIS.Infrastructure
             var param = new DynamicParameters();
             param.Add("@limit", limit);
             param.Add("@offset", offset);
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
             var result = await _unitOfWork.Connection.QueryAsync<TEntity>(sql, param, _unitOfWork.Transaction);
             return result.ToList();
         }

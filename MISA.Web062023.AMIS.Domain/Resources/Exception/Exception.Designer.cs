@@ -97,6 +97,15 @@ namespace MISA.Web062023.AMIS.Domain.Resources.Exception {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mật khẩu không đúng..
+        /// </summary>
+        public static string IncorrectPassword {
+            get {
+                return ResourceManager.GetString("IncorrectPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bản ghi với id {0} không tồn tại.
         /// </summary>
         public static string NotExistId {

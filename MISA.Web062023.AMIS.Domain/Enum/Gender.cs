@@ -10,19 +10,19 @@ namespace MISA.Web062023.AMIS.Domain.Enum
     /// <summary>
     /// Enum giới tính
     /// </summary>
-    internal enum Gender
+    public enum Gender
     {
         /// <summary>
         /// Nam
         /// </summary>
-        Male = 0,
+        MALE = 0,
         /// <summary>
         /// Nữ
         /// </summary>
-        Female = 1,
+        FEMALE = 1,
         /// <summary>
         /// Khác
         /// </summary>
-        Other = 2,
+        OTHER = 2,
     }
 }

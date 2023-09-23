@@ -28,6 +28,12 @@ namespace MISA.Web062023.AMIS.Application
         public string getConnectionString();
 
         /// <summary>
+        /// The db connection.
+        /// </summary>
+        /// <returns>The result.</returns>
+        public DbConnection DbConnection();
+
+        /// <summary>
         /// Bắt đầu transaction
         /// </summary>
         /// Created by: NTLam (17/08/2023)

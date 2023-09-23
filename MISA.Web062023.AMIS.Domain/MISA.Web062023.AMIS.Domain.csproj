@@ -11,6 +11,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Resources\Authentication\Authentication.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Authentication.resx</DependentUpon>
+	  </Compile>
 	  <Compile Update="Resources\Base\Base.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
@@ -36,9 +41,18 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>FixedAsset.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Resources\RecordingAsset\RecordingAsset.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>RecordingAsset.resx</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Authentication\Authentication.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Authentication.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Base\Base.resx">
 	    <Generator>PublicResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Base.Designer.cs</LastGenOutput>
@@ -61,6 +75,10 @@
 	  <EmbeddedResource Update="Resources\FixedAssetCategory\FixedAssetCategory.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>FixedAssetCategory.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\RecordingAsset\RecordingAsset.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>RecordingAsset.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
 	</ItemGroup>
 

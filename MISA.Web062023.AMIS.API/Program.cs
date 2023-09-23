@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using MISA.Web062023.AMIS.API;
 using MISA.Web062023.AMIS.Application;
 using MISA.Web062023.AMIS.Domain;
@@ -62,14 +63,44 @@ builder.Services.AddScoped<IUnitOfWork>(
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IFixedAssetCategoryRepository, FixedAssetCategoryRepository>();
 builder.Services.AddScoped<IFixedAssetRepository, FixedAssetRepository>();
+builder.Services.AddScoped<IRecordingRepository, RecordingRepository>();
 
 builder.Services.AddScoped<IDepartmentManager, DepartmentManager>();
 builder.Services.AddScoped<IFixedAssetCategoryManager, FixedAssetCategoryManager>();
 builder.Services.AddScoped<IFixedAssetManager, FixedAssetManager>();
+builder.Services.AddScoped<IRecordingManager, RecordingManager>();
 
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IFixedAssetCategoryService, FixedAssetCategoryService>();
 builder.Services.AddScoped<IFixedAssetService, FixedAssetService>();
+builder.Services.AddScoped<IRecordingService, RecordingService>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<IRecordingAssetService, RecordingAssetService>();
+builder.Services.AddScoped<IRecordingAssetsRepository, RecordingAssetsRepository>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+        options.AccessDeniedPath = "/Forbidden/";
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = redirectContext =>
+            {
+                redirectContext.HttpContext.Response.StatusCode = 401;
+                return Task.CompletedTask;
+            },
+            OnRedirectToAccessDenied = redirectContext =>
+            {
+                redirectContext.HttpContext.Response.StatusCode = 403;
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -92,6 +123,14 @@ app.UseCors(builder =>
     .AllowAnyHeader();
 });
 
+var cookiePolicyOptions = new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+};
+
+app.UseCookiePolicy(cookiePolicyOptions);
+
+app.UseAuthentication();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
