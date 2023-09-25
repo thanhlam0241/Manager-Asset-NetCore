@@ -117,34 +117,85 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BadRequestException" xml:space="preserve">
-    <value>Dữ liệu gửi đến không hợp lệ</value>
+  <data name="AccountActive" xml:space="preserve">
+    <value>Tài khoản chưa bị vô hiệu hóa trước đó.</value>
   </data>
-  <data name="CodesExist" xml:space="preserve">
-    <value>Các mã {0} đã tồn tại. Vui lòng nhập mã khác</value>
+  <data name="AccountCredentialNotFound" xml:space="preserve">
+    <value> Không tồn tại tài khoản có tên đăng nhập/email/số điện thoại là {0}</value>
   </data>
-  <data name="ConflictException" xml:space="preserve">
-    <value>Dữ liệu gửi đến bị trùng</value>
+  <data name="AccountDeactive" xml:space="preserve">
+    <value>Tài khoản đã bị vô hiệu hóa trước đó.</value>
   </data>
-  <data name="DuplicateCode" xml:space="preserve">
-    <value>Mã {0} đã tồn tại. Vui lòng nhập mã khác</value>
+  <data name="AccountEmailNotFound" xml:space="preserve">
+    <value>Không tồn tại tài khoản có email là {0} !!!</value>
   </data>
-  <data name="IncorrectPassword" xml:space="preserve">
-    <value>Mật khẩu không đúng.</value>
+  <data name="AccountIdNotFound" xml:space="preserve">
+    <value>Không tồn tại tài khoản có id {0} !!!</value>
   </data>
-  <data name="NotExistId" xml:space="preserve">
-    <value>Bản ghi với id {0} không tồn tại</value>
+  <data name="AccountPasswordNotCorrect" xml:space="preserve">
+    <value>Sai mật khẩu !!!</value>
   </data>
-  <data name="NotFoundException" xml:space="preserve">
-    <value>Không tìm thấy dữ liệu</value>
+  <data name="AccountPhoneNumberNotFound" xml:space="preserve">
+    <value>Không tồn tại tài khoản có số điện thoại là {0} !!!</value>
   </data>
-  <data name="Server" xml:space="preserve">
-    <value>Lỗi từ server. Thử lại</value>
+  <data name="AccountUsernameNotFound" xml:space="preserve">
+    <value>Không tồn tại tài khoản có tên đăng nhập là: {0} !!!</value>
   </data>
-  <data name="SomeIdsExist" xml:space="preserve">
-    <value>Các mã {0} đã tồn tại</value>
+  <data name="ChangePasswordSuccess" xml:space="preserve">
+    <value>Thay đổi mật khẩu thành công.</value>
   </data>
-  <data name="SomeIdsNotExist" xml:space="preserve">
-    <value>Không tồn tại các Id: {0}</value>
+  <data name="CreateAccountSuccess" xml:space="preserve">
+    <value>Tạo mới tài khoản thành công.</value>
+  </data>
+  <data name="DeleteAccountSuccess" xml:space="preserve">
+    <value>Xóa tài khoản thành công.</value>
+  </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>Email đã tồn tại !!!</value>
+  </data>
+  <data name="DuplicatePhoneNumber" xml:space="preserve">
+    <value>Số điện thoại đã tồn tại !!!</value>
+  </data>
+  <data name="DuplicateUsername" xml:space="preserve">
+    <value>Tên đăng nhập đã tồn tại !!!</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Email không hợp lệ.</value>
+  </data>
+  <data name="InvalidPhoneNumber" xml:space="preserve">
+    <value>Số điện thoại không hợp lệ.</value>
+  </data>
+  <data name="InvalidUsername" xml:space="preserve">
+    <value>Tên đăng nhập không hợp lệ.</value>
+  </data>
+  <data name="LockAccount" xml:space="preserve">
+    <value>Tài khoản đã bị vô hiệu hóa.</value>
+  </data>
+  <data name="LockAccountSuccess" xml:space="preserve">
+    <value>Vô hiệu hóa tài khoản thành công.</value>
+  </data>
+  <data name="LoginSuccess" xml:space="preserve">
+    <value>Đăng nhập thành công.</value>
+  </data>
+  <data name="LogoutSuccess" xml:space="preserve">
+    <value>Đăng xuất thành công.</value>
+  </data>
+  <data name="NewAccountInvalid" xml:space="preserve">
+    <value>Tài khoản mới không hợp lệ !!!</value>
+  </data>
+  <data name="RegisterSuccess" xml:space="preserve">
+    <value>Đăng ký thành công. Chờ tài khoản được kích hoạt.</value>
+  </data>
+  <data name="ResetPasswordSuccess" xml:space="preserve">
+    <value>Làm mới mật khẩu thành công.</value>
+  </data>
+  <data name="UnlockAccountSuccess" xml:space="preserve">
+    <value>Mở khóa tài khoản thành công.</value>
+  </data>
+  <data name="UpdateAccountSuccess" xml:space="preserve">
+    <value>Cập nhật tài khoản thành công.</value>
+  </data>
+  <data name="UsernameOrEmailOrPhoneRequired" xml:space="preserve">
+    <value>Tài khoản phải có ít nhất 1 trong 3 trường: tên đăng nhập, email, số điện thoại</value>
   </data>
 </root>

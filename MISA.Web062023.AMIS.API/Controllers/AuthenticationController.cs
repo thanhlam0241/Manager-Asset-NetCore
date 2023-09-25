@@ -14,21 +14,21 @@ namespace MISA.Web062023.AMIS.API.Controllers
     /// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class AuthController : Controller
+    public class AuthenticationController : Controller
     {
-        private readonly IAuthService _authService;
+        private readonly IAccountService _accountService;
 
         /// <summary>
         /// The .ctor.
         /// </summary>
-        /// <param name="authService">The auth service.</param>
-        public AuthController(IAuthService authService)
+        /// <param name="accountService">The auth service.</param>
+        public AuthenticationController(IAccountService accountService)
         {
-            _authService = authService;
+            _accountService = accountService;
         }
 
         /// <summary>
-        /// The login.
+        /// Đăng nhập
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>The result.</returns>
@@ -36,15 +36,17 @@ namespace MISA.Web062023.AMIS.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _authService.FindUserAsync(request.Credential);
+            var user = await _accountService.FindAccountByCredentialAsync(request.Credential);
 
-            if (user.UserPassword != request.Password)
+            if (!AccountUtil.VerifyPassword(request.Password, user.Password))
             {
                 return Unauthorized(Domain.Resources.Authentication.Authentication.IncorrectPassword);
             }
             var claim = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, value: request.Credential),
+                new Claim("Id",user.AccountId.ToString()),
+                new Claim(ClaimTypes.Role, "1")
             };
             var claimsIdentity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -59,6 +61,22 @@ namespace MISA.Web062023.AMIS.API.Controllers
                                               new ClaimsPrincipal(claimsIdentity),
                                                              authProperties);
             return Ok(Domain.Resources.Authentication.Authentication.LoginSuccess);
+        }
+
+        /// <summary>
+        /// Đăng ký tài khoản mới
+        /// </summary>
+        /// <param name="accountCreate">The account create.</param>
+        /// <returns>The result.</returns>
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] AccountCreateDto accountCreate)
+        {
+            var result = await _accountService.InsertAccountAsync(accountCreate);
+            if (result == 0)
+            {
+                return BadRequest(Domain.Resources.Exception.Exception.Server);
+            }
+            return StatusCode(StatusCodes.Status201Created, Domain.Resources.Account.Account.RegisterSuccess);
         }
 
         /// <summary>

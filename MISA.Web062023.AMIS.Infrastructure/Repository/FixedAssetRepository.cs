@@ -86,7 +86,6 @@ namespace MISA.Web062023.AMIS.Infrastructure
         /// Created by: Nguyễn Thanh Lâm (11/8/2023)
         public async Task<FilterFixedAsset> GetFilterAssetsAsync(int pageSize, int pageNumber, string filterString, List<Guid>? departmantIds, List<Guid>? fixedAssetCategoryIds)
         {
-
             var parameters = new DynamicParameters();
             var fieldAssets = new string[]
             {
@@ -330,11 +329,17 @@ namespace MISA.Web062023.AMIS.Infrastructure
             {
                 return Task.FromResult("TS000001");
             }
+            string result;
+            var number = int.Parse(code[2..]) + 1;
+            if (number < 1000000)
+            {
+                result = $"TS{number.ToString().PadLeft(6, '0')}";
+            }
             else
             {
-                var number = int.Parse(code[2..]) + 1;
-                return Task.FromResult($"TS{number.ToString().PadLeft(6, '0')}");
+                result = $"TS{number}";
             }
+            return Task.FromResult(result);
         }
 
     }

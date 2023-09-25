@@ -69,14 +69,15 @@ builder.Services.AddScoped<IDepartmentManager, DepartmentManager>();
 builder.Services.AddScoped<IFixedAssetCategoryManager, FixedAssetCategoryManager>();
 builder.Services.AddScoped<IFixedAssetManager, FixedAssetManager>();
 builder.Services.AddScoped<IRecordingManager, RecordingManager>();
+builder.Services.AddScoped<IAccountManager, AccountManager>();
 
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<IFixedAssetCategoryService, FixedAssetCategoryService>();
 builder.Services.AddScoped<IFixedAssetService, FixedAssetService>();
 builder.Services.AddScoped<IRecordingService, RecordingService>();
 
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 builder.Services.AddScoped<IRecordingAssetService, RecordingAssetService>();
 builder.Services.AddScoped<IRecordingAssetsRepository, RecordingAssetsRepository>();

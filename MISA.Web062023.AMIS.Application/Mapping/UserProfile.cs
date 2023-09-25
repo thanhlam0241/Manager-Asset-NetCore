@@ -13,9 +13,9 @@ namespace MISA.Web062023.AMIS.Application
         public UserProfile()
         {
 
-            CreateMap<UserCreateDto, User>();
+            CreateMap<UserCreateDto, Account>();
 
-            CreateMap<UserUpdateDto, User>();
+            CreateMap<UserUpdateDto, Account>();
         }
     }
 }

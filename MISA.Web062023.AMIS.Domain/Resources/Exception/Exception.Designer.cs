@@ -124,7 +124,7 @@ namespace MISA.Web062023.AMIS.Domain.Resources.Exception {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lỗi từ server. Thử lại sau .
+        ///   Looks up a localized string similar to Lỗi từ server. Thử lại.
         /// </summary>
         public static string Server {
             get {

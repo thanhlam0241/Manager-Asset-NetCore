@@ -61,6 +61,15 @@ namespace MISA.Web062023.AMIS.Domain.Resources.RecordingAsset {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chưa thể tạo mới code mới (Thử lại sau 5 giây).
+        /// </summary>
+        public static string CanGenCode {
+            get {
+                return ResourceManager.GetString("CanGenCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tạo mới chứng từ thành công..
         /// </summary>
         public static string CreateNewRecording {
@@ -75,6 +84,15 @@ namespace MISA.Web062023.AMIS.Domain.Resources.RecordingAsset {
         public static string CreateNewRecordingFail {
             get {
                 return ResourceManager.GetString("CreateNewRecordingFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mã {0} đã tồn tại..
+        /// </summary>
+        public static string DuplicateCode {
+            get {
+                return ResourceManager.GetString("DuplicateCode", resourceCulture);
             }
         }
         

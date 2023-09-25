@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CanGenCode" xml:space="preserve">
+    <value>Chưa thể tạo mới code mới (Thử lại sau 5 giây)</value>
+  </data>
   <data name="CreateNewRecording" xml:space="preserve">
     <value>Tạo mới chứng từ thành công.</value>
   </data>
   <data name="CreateNewRecordingFail" xml:space="preserve">
     <value>Tạo mới chứng từ thất bại</value>
+  </data>
+  <data name="DuplicateCode" xml:space="preserve">
+    <value>Mã {0} đã tồn tại.</value>
   </data>
   <data name="NoAssetSelect" xml:space="preserve">
     <value>Không có tài sản nào được chọn để chứng từ</value>
