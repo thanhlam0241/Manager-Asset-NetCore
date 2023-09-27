@@ -31,18 +31,7 @@ namespace MISA.Web062023.AMIS.Application
 
         public async Task<int> CreateNewRecording(RecordingCreateDto recording, List<Guid> ids)
         {
-            var listAssets = await _fixedAssetRepository.GetByListIdAsync(ids);
-            if (listAssets.Count() != ids.Count)
-            {
-                throw new NotFoundException("Có tài sản không tồn tại");
-            }
-            RecordingAsset recordingAsset = new()
-            {
-                Recording = MapRecordingCreateDto(recording),
-                FixedAssets = listAssets.ToList()
-            };
-            var result = await _recordingAssetsRepository.InsertRecordingAssets(recordingAsset);
-            return result;
+            throw new NotImplementedException();
         }
 
         public Task<int> DeleteRecordingAsset(Guid recordingId, List<Guid> ids)
@@ -50,9 +39,9 @@ namespace MISA.Web062023.AMIS.Application
             throw new NotImplementedException();
         }
 
-        public async Task<List<FixedAsset>> GetAssetsByRecordingIdAsync(Guid recordingId)
+        public async Task<List<RecordedAsset>> GetAssetsByRecordingIdAsync(Guid recordingId)
         {
-            var result = await _recordingAssetsRepository.GetRecordingAssets(recordingId);
+            var result = await _recordingAssetsRepository.GetRecordingAssetsAsync(recordingId);
             return result.ToList();
         }
 

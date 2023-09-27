@@ -21,9 +21,9 @@ namespace MISA.Web062023.AMIS.Application
         {
             CreateMap<FixedAsset, FixedAssetDto>();
 
-            CreateMap<FixedAssetCreateDto, FixedAsset>();
+            CreateMap<FixedAssetCreateDto, RecordedAsset>();
 
-            CreateMap<FixedAssetUpdateDto, FixedAsset>();
+            CreateMap<FixedAssetUpdateDto, RecordedAsset>();
 
             CreateMap<FixedAsset, FixedAssetViewDto>()
                 .ForMember(des => des.AccumulatedDepreciation, act => act.MapFrom(src => (float)ConvertValueExtension.ConvertNullableValue(src.Cost) / 100 * ConvertValueExtension.ConvertNullableValue(src.DepreciationRate)))

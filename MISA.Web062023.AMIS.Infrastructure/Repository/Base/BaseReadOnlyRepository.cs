@@ -55,12 +55,7 @@ namespace MISA.Web062023.AMIS.Infrastructure
         {
             var entity = await FindByIdAsync(id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(string.Format(Domain.Resources.Exception.Exception.NotExistId, id));
-            }
-
-            return entity;
+            return entity == null ? throw new NotFoundException(string.Format(Domain.Resources.Exception.Exception.NotExistId, id)) : entity;
         }
 
         /// <summary>

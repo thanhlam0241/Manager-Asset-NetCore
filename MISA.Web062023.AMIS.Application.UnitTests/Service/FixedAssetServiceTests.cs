@@ -22,7 +22,7 @@ namespace MISA.Web062023.AMIS.Application
         private IDepartmentRepository _departmentRepository;
         private IMapper _mapper;
         private IFixedAssetManager _fixedAssetManager;
-        private List<FixedAsset> _fixedAssets;
+        private List<RecordedAsset> _fixedAssets;
         private List<FixedAssetDto> _fixedAssetsDto;
 
 
@@ -39,12 +39,12 @@ namespace MISA.Web062023.AMIS.Application
             _mapper = Substitute.For<IMapper>();
             _fixedAssetManager = Substitute.For<IFixedAssetManager>();
 
-            _fixedAssets = new List<FixedAsset>();
+            _fixedAssets = new List<RecordedAsset>();
             _fixedAssetsDto = new List<FixedAssetDto>();
             for (int i = 0; i < 10; ++i)
             {
                 // Tạo một thực thể FixedAsset và FixedAssetDto
-                var FixedAsset = new FixedAsset();
+                var FixedAsset = new RecordedAsset();
                 var FixedAssetDto = new FixedAssetDto();
 
                 // Thêm FixedAsset vào danh sách đầu ra
@@ -91,7 +91,7 @@ namespace MISA.Web062023.AMIS.Application
         {
             // Arrange
             var id = Guid.NewGuid();
-            var fixedAsset = new FixedAsset() { FixedAssetId = id };
+            var fixedAsset = new RecordedAsset() { FixedAssetId = id };
             var fixedAssetDto = new FixedAssetDto() { FixedAssetId = id };
 
             _mapper.Map<FixedAssetDto>(fixedAsset).Returns(fixedAssetDto);
@@ -117,10 +117,10 @@ namespace MISA.Web062023.AMIS.Application
         {
             // Arrage
             var fixedAssetCreateDto = new FixedAssetCreateDto();
-            var fixedAsset = new FixedAsset();
+            var fixedAsset = new RecordedAsset();
             var fixedAssetDto = new FixedAssetDto();
 
-            _mapper.Map<FixedAsset>(fixedAssetCreateDto).Returns(fixedAsset);
+            _mapper.Map<RecordedAsset>(fixedAssetCreateDto).Returns(fixedAsset);
             _mapper.Map<FixedAssetDto>(fixedAsset).Returns(fixedAssetDto);
 
             var FixedAssetService = new FixedAssetService(_fixedAssetRepository, _departmentRepository, _fixedAssetCategoryRepository, _fixedAssetManager, _mapper);
@@ -145,10 +145,10 @@ namespace MISA.Web062023.AMIS.Application
             // Arrange 
             var id = Guid.NewGuid();
             var FixedAssetUpdateDto = new FixedAssetUpdateDto();
-            var FixedAsset = new FixedAsset();
+            var FixedAsset = new RecordedAsset();
             var FixedAssetDto = new FixedAssetDto();
 
-            _mapper.Map<FixedAsset>(FixedAssetUpdateDto).Returns(FixedAsset);
+            _mapper.Map<RecordedAsset>(FixedAssetUpdateDto).Returns(FixedAsset);
             _mapper.Map<FixedAssetDto>(FixedAsset).Returns(FixedAssetDto);
             _fixedAssetRepository.GetAsync(id).Returns(FixedAsset);
 
@@ -175,7 +175,7 @@ namespace MISA.Web062023.AMIS.Application
             // Arrange
             var id = Guid.NewGuid();
             int expectedResult = 1;
-            var fixedAsset = new FixedAsset()
+            var fixedAsset = new RecordedAsset()
             {
                 FixedAssetId = id
             };
@@ -206,12 +206,12 @@ namespace MISA.Web062023.AMIS.Application
             // Arrange
             int expectedResult = 5;
             var ids = new List<Guid>();
-            var fixedAssets = new List<FixedAsset>();
+            var fixedAssets = new List<RecordedAsset>();
 
             for (int i = 0; i < 5; i++)
             {
                 var id = Guid.NewGuid();
-                var FixedAsset = new FixedAsset() { FixedAssetId = id };
+                var FixedAsset = new RecordedAsset() { FixedAssetId = id };
 
                 ids.Add(id);
                 fixedAssets.Add(FixedAsset);
@@ -243,12 +243,12 @@ namespace MISA.Web062023.AMIS.Application
             // Arrange
             var ids = new List<Guid>();
             var idsError = new List<Guid>();
-            var fixedAssets = new List<FixedAsset>();
+            var fixedAssets = new List<RecordedAsset>();
 
             for (int i = 0; i < 8; i++)
             {
                 var id = Guid.NewGuid();
-                var fixedAsset = new FixedAsset() { FixedAssetId = id };
+                var fixedAsset = new RecordedAsset() { FixedAssetId = id };
 
                 ids.Add(id);
                 fixedAssets.Add(fixedAsset);
@@ -257,7 +257,7 @@ namespace MISA.Web062023.AMIS.Application
             for (int i = 0; i < 2; i++)
             {
                 var id = Guid.NewGuid();
-                var fixedAsset = new FixedAsset() { FixedAssetId = Guid.NewGuid() };
+                var fixedAsset = new RecordedAsset() { FixedAssetId = Guid.NewGuid() };
 
                 ids.Add(id);
                 idsError.Add(id);
@@ -290,13 +290,13 @@ namespace MISA.Web062023.AMIS.Application
         public async Task MapEntityCreateDtoToEntity_FixedAssetCreateDto_Success()
         {
             // Arrange
-            var fixedAsset = new FixedAsset();
+            var fixedAsset = new RecordedAsset();
             var fixedAssetCreateDto = new FixedAssetCreateDto()
             {
                 FixedAssetCode = "DP-12345"
             };
 
-            _mapper.Map<FixedAsset>(fixedAssetCreateDto).Returns(fixedAsset);
+            _mapper.Map<RecordedAsset>(fixedAssetCreateDto).Returns(fixedAsset);
             var fixedAssetService = new FixedAssetService(_fixedAssetRepository, _departmentRepository, _fixedAssetCategoryRepository, _fixedAssetManager, _mapper);
 
             // Act
@@ -317,7 +317,7 @@ namespace MISA.Web062023.AMIS.Application
         public async Task MapEntityToEntityDto_FixedAssetCreateDto_Success()
         {
             // Arrange
-            var fixedAsset = new FixedAsset();
+            var fixedAsset = new RecordedAsset();
             var fixedAssetDto = new FixedAssetDto();
 
             _mapper.Map<FixedAssetDto>(fixedAsset).Returns(fixedAssetDto);

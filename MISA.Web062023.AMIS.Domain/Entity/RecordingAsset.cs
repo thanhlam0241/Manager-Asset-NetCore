@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace MISA.Web062023.AMIS.Domain
 {
+
+    /// <summary>
+    /// The recording asset.
+    /// </summary>
     public class RecordingAsset : BaseAuditEntity
     {
-        public List<FixedAsset> FixedAssets { get; set; }
+        public List<RecordedAsset> Assets { get; set; }
         public Recording Recording { get; set; }
 
     }

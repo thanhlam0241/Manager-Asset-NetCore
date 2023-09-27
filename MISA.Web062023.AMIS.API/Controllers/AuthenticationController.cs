@@ -40,7 +40,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
 
             if (!AccountUtil.VerifyPassword(request.Password, user.Password))
             {
-                return Unauthorized(Domain.Resources.Authentication.Authentication.IncorrectPassword);
+                throw new NotFoundException(Domain.Resources.Authentication.Authentication.IncorrectPassword);
             }
             var claim = new List<Claim>
             {
@@ -101,7 +101,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
             var user = User.Identity as ClaimsIdentity;
             if (User.Identity == null || user == null || !User.Identity.IsAuthenticated)
             {
-                return Unauthorized();
+                return StatusCode(StatusCodes.Status406NotAcceptable);
             }
             return Ok(new
             {

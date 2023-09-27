@@ -60,7 +60,7 @@ namespace MISA.Web062023.AMIS.Domain.UnitTests.Service
         {
             // Arrage
             string code = "ID-EXISTS";
-            var fixedAsset = new FixedAsset();
+            var fixedAsset = new RecordedAsset();
 
             _fixedAssetRepository.FindByCodeAsync(code).Returns(fixedAsset);
 

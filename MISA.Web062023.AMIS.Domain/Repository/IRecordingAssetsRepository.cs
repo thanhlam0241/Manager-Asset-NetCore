@@ -8,11 +8,13 @@ namespace MISA.Web062023.AMIS.Domain
 {
     public interface IRecordingAssetsRepository
     {
-        public Task<IEnumerable<FixedAsset>> GetRecordingAssets(Guid recordingId);
+        public Task<IEnumerable<RecordedAsset>> GetRecordingAssetsAsync(Guid recordingId);
 
-        public Task<int> InsertRecordingAssets(RecordingAsset recordingAssets);
-        public Task<int> UpdateRecordingAssets(Guid recordingId, List<Guid> assetIds);
+        public Task<int> InsertRecordingAssetsAsync(RecordingAsset recordingAssets);
 
-        public Task<int> DeleteRecordingAssets(Guid recordingId, List<Guid> assetIds);
+        public Task<int> InsertRecordingAssetsWithoutTransactionAsync(RecordingAsset recordingAssets);
+        public Task<int> UpdateRecordingAssetsAsync(Guid recordingId, List<Guid> assetIds);
+
+        public Task<int> DeleteRecordingAssetsAsync(Guid recordingId, List<Guid> assetIds);
     }
 }
