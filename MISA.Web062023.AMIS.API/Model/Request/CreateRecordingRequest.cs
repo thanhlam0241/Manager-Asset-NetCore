@@ -8,7 +8,7 @@ namespace MISA.Web062023.AMIS.Application
 {
     public class CreateRecordingRequest
     {
-        public List<Guid> AssetIds { get; set; }
+        public List<RecordedAssetCreateDto> Assets { get; set; }
 
         public RecordingCreateDto Recording { get; set; }
     }

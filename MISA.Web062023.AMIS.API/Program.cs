@@ -64,6 +64,9 @@ builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IFixedAssetCategoryRepository, FixedAssetCategoryRepository>();
 builder.Services.AddScoped<IFixedAssetRepository, FixedAssetRepository>();
 builder.Services.AddScoped<IRecordingRepository, RecordingRepository>();
+builder.Services.AddScoped<IRecordedAssetRepository, RecordedAssetRepository>();
+builder.Services.AddScoped<IResourceAssetRepository, ResourceAssetRepository>();
+builder.Services.AddScoped<IResourceBudgetRepository, ResourceBudgetRepository>();
 
 builder.Services.AddScoped<IDepartmentManager, DepartmentManager>();
 builder.Services.AddScoped<IFixedAssetCategoryManager, FixedAssetCategoryManager>();

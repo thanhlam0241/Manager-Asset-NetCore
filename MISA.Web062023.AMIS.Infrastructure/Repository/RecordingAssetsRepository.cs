@@ -81,11 +81,13 @@ namespace MISA.Web062023.AMIS.Infrastructure
             }
                 , parameters, splitOn: "department_id, resource_asset_id, resource_budget_id");
 
+            var result1 = listAssets.GroupBy(a => a.RecordedAssetId);
+
             var result = listAssets.GroupBy(a => a.RecordedAssetId).Select(
                 a =>
                 {
                     var groupResourceAssets = a.First();
-                    groupResourceAssets.ResourceAssets = a.Select(ra => ra.ResourceAssets.Single()).ToList();
+                    groupResourceAssets.ResourceAssets = a.Select(ra => ra.ResourceAssets.First()).ToList();
                     return groupResourceAssets;
                 });
 
@@ -156,7 +158,7 @@ namespace MISA.Web062023.AMIS.Infrastructure
                 """;
 
             var sqlInsertResourceAsset = """
-                                         INSERT INTO resource_asset (resource_budget_id, asset_id, cost) 
+                                         INSERT INTO resource_asset (resource_budget_id, recorded_asset_id, cost) 
                                          VALUES (@ResourceBudget, @AssetId, @Cost)
                                          """;
 
@@ -165,17 +167,19 @@ namespace MISA.Web062023.AMIS.Infrastructure
             using var connectionInsertRecording = _unitOfWork.DbConnection();
             connectionInsertRecording.Open();
             using var transactionInsertRecording = connectionInsertRecording.BeginTransaction();
-            var resultInsertRecording = await connectionInsertRecording.ExecuteAsync(sqlInsertRecording, parametersInsertRecording);
+            var resultInsertRecording = await connectionInsertRecording.ExecuteAsync(sqlInsertRecording, parametersInsertRecording, transactionInsertRecording);
             if (resultInsertRecording == 1)
             {
                 try
                 {
+                    transactionInsertRecording.Commit();
                     using var connectionInsertRecordedAsset = _unitOfWork.DbConnection();
                     connectionInsertRecordedAsset.Open();
                     using var transactionInsertRecordedAsset = connectionInsertRecordedAsset.BeginTransaction();
-                    var resultInsertRecordedAsset = await connectionInsertRecordedAsset.ExecuteAsync(sqlInsertRecordedAsset, paramInsertRecordedAssets);
+                    var resultInsertRecordedAsset = await connectionInsertRecordedAsset.ExecuteAsync(sqlInsertRecordedAsset, paramInsertRecordedAssets, transactionInsertRecordedAsset);
                     if (resultInsertRecordedAsset == assets.Count)
                     {
+                        transactionInsertRecordedAsset.Commit();
                         List<dynamic> resourceAssets = new List<dynamic>();
                         foreach (RecordedAsset asset in assets)
                         {
@@ -198,19 +202,19 @@ namespace MISA.Web062023.AMIS.Infrastructure
                         using var transactionInsertResourceAsset = connectionInsertResourceAsset.BeginTransaction();
                         try
                         {
-                            var resultInsertResourceAsset = await connectionInsertResourceAsset.ExecuteAsync(sqlInsertResourceAsset, resourceAssets);
+                            var resultInsertResourceAsset = await connectionInsertResourceAsset.ExecuteAsync(sqlInsertResourceAsset, resourceAssets, transactionInsertResourceAsset);
                             if (resultInsertResourceAsset == resourceAssets.Count)
                             {
+                                transactionInsertResourceAsset.Commit();
                                 var connectionInsertRecordingAsset = _unitOfWork.DbConnection();
                                 connectionInsertRecordingAsset.Open();
+                                var transactionInsertRecordingAsset = connectionInsertRecordingAsset.BeginTransaction();
                                 try
                                 {
-                                    var resultInsertRecordingAsset = await connectionInsertRecordingAsset.ExecuteAsync(sqlInsertRecordingAsset, lists);
+                                    var resultInsertRecordingAsset = await connectionInsertRecordingAsset.ExecuteAsync(sqlInsertRecordingAsset, lists, transactionInsertRecordingAsset);
                                     if (resultInsertRecordingAsset == lists.Count)
                                     {
-                                        transactionInsertResourceAsset.Commit();
-                                        transactionInsertRecordedAsset.Commit();
-                                        transactionInsertRecording.Commit();
+                                        transactionInsertRecordingAsset.Commit();
                                         connectionInsertResourceAsset.Close();
                                         connectionInsertRecordedAsset.Close();
                                         connectionInsertRecording.Close();
@@ -232,12 +236,7 @@ namespace MISA.Web062023.AMIS.Infrastructure
                                 catch (Exception ex)
                                 {
                                     transactionInsertResourceAsset.Rollback();
-                                    transactionInsertRecordedAsset.Rollback();
-                                    transactionInsertRecording.Rollback();
                                     connectionInsertResourceAsset.Close();
-                                    connectionInsertRecordedAsset.Close();
-                                    connectionInsertRecording.Close();
-                                    connectionInsertRecordingAsset.Close();
                                     throw new Exception(ex.Message);
                                 }
                             }
@@ -255,9 +254,6 @@ namespace MISA.Web062023.AMIS.Infrastructure
                         catch (Exception ex)
                         {
                             transactionInsertResourceAsset.Rollback();
-                            transactionInsertRecording.Rollback();
-                            connectionInsertRecordedAsset.Close();
-                            connectionInsertRecording.Close();
                             connectionInsertRecordedAsset.Close();
                             throw new Exception(ex.Message);
                         }

@@ -10,7 +10,7 @@ namespace MISA.Web062023.AMIS.Application
     public interface IRecordingAssetService
     {
         public Task<List<RecordedAsset>> GetAssetsByRecordingIdAsync(Guid recordingId);
-        public Task<int> CreateNewRecording(RecordingCreateDto recording, List<Guid> ids);
+        public Task<int> CreateNewRecording(RecordingCreateDto recording, List<RecordedAssetCreateDto> assets);
 
         public Task<int> DeleteRecordingAsset(Guid recordingId, List<Guid> ids);
 

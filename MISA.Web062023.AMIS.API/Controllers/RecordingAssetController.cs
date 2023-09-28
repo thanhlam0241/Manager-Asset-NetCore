@@ -42,13 +42,13 @@ namespace MISA.Web062023.AMIS.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRecording([FromBody] CreateRecordingRequest request)
         {
-            var listIds = request.AssetIds;
+            var lists = request.Assets;
             var recording = request.Recording;
-            if (listIds.Count == 0)
+            if (lists.Count == 0)
             {
                 return BadRequest(Domain.Resources.RecordingAsset.RecordingAsset.NoAssetSelect);
             }
-            var result = await _recordingAssetService.CreateNewRecording(recording, listIds);
+            var result = await _recordingAssetService.CreateNewRecording(recording, lists);
             if (result == 0)
             {
                 return BadRequest(Domain.Resources.RecordingAsset.RecordingAsset.CreateNewRecordingFail);

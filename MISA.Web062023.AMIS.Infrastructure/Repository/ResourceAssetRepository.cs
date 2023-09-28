@@ -72,7 +72,8 @@ namespace MISA.Web062023.AMIS.Infrastructure
         public async Task<int> InsertMultipleAsync(Guid assetId, List<ResourceAsset> resourceAssets)
         {
             var sql = """
-                INSERT INTO resource_asset (recorded_asset_id, resourse_budget_id,recorded_asset_id, cost)
+                INSERT INTO resource_asset (resourse_budget_id,recorded_asset_id, cost)
+                VALUES ( @ResourceBudgetId, @AssetId, @Cost)
                 """;
             var lists = new List<dynamic>();
             foreach (var resourceAsset in resourceAssets)
@@ -83,10 +84,9 @@ namespace MISA.Web062023.AMIS.Infrastructure
                 }
                 lists.Add(new
                 {
-                    resource_asset_id = resourceAsset.ResourceAssetId,
-                    resourse_budget_id = resourceAsset.ResourceBudget.ResourceBudgetId,
-                    recorded_asset_id = assetId,
-                    cost = resourceAsset.Cost
+                    resourceAsset.ResourceBudget.ResourceBudgetId,
+                    AssetId = assetId,
+                    resourceAsset.Cost
                 });
             }
             var result = await _unitOfWork.Connection.ExecuteAsync(sql, lists, _unitOfWork.Transaction);
@@ -96,8 +96,8 @@ namespace MISA.Web062023.AMIS.Infrastructure
         public async Task<int> InsertOneAsync(Guid assetId, ResourceAsset resourceAsset)
         {
             var sql = """
-                INSERT INTO resource_asset (resource_asset_id, resourse_budget_id,recorded_asset_id, cost)
-                VALUES (@ResourceAssetId, @ResourceBudgetId, @AssetId, @Cost)
+                INSERT INTO resource_asset ( resourse_budget_id,recorded_asset_id, cost)
+                VALUES ( @ResourceBudgetId, @AssetId, @Cost)
                 """;
             if (resourceAsset.ResourceBudget == null)
             {
@@ -105,7 +105,6 @@ namespace MISA.Web062023.AMIS.Infrastructure
             }
             var parameters = new
             {
-                resourceAsset.ResourceAssetId,
                 resourceAsset.ResourceBudget.ResourceBudgetId,
                 AssetId = assetId,
                 resourceAsset.Cost

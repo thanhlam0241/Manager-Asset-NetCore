@@ -14,8 +14,6 @@ namespace MISA.Web062023.AMIS.Application
 
         public Guid DepartmentId { get; set; }
 
-        public int? Value { get; set; } = 0;
-
         public float? DepreciationRate { get; set; } = 0;
 
         public RecordingType? RecordingType { get; set; }
