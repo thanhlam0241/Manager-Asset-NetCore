@@ -342,5 +342,77 @@ namespace MISA.Web062023.AMIS.Infrastructure
             return Task.FromResult(result);
         }
 
+        /// <summary>
+        /// The get filter except codes async.
+        /// </summary>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="pageNumber">The page number.</param>
+        /// <param name="filterString">The filter string.</param>
+        /// <param name="codes">The codes.</param>
+        /// <returns>The result.</returns>
+        /// Created by: Nguyễn Thanh Lâm (11/8/2023)
+        public async Task<FilterFixedAsset> GetFilterExceptCodesAsync(int pageSize, int pageNumber, string filterString, List<string>? codes = null)
+        {
+            var parameters = new DynamicParameters();
+            var fieldAssets = new string[]
+            {
+               "fixed_asset_code", "fixed_asset_name",
+                "department_name",
+                "fixed_asset_category_name", "cost", "quantity"
+            };
+            string filterQuery = (filterString != "") ? $"WHERE ({string.Join(" LIKE @FilterPattern OR ", fieldAssets)} LIKE @FilterPattern)  " : "";
+            if (codes != null && codes.Count > 0)
+            {
+                if (!string.IsNullOrWhiteSpace(filterQuery))
+                {
+                    if (codes.Count > 1)
+                    {
+                        parameters.Add("Codes", codes);
+                        filterQuery += "AND ( fixed_asset_code NOT IN @Codes )";
+                    }
+                    else
+                    {
+                        parameters.Add("Code", codes[0]);
+                        filterQuery += "AND ( fixed_asset_code <> @Code )";
+                    }
+                }
+                else
+                {
+                    if (codes.Count > 1)
+                    {
+                        parameters.Add("Codes", codes);
+                        filterQuery = "WHERE ( fixed_asset_code NOT IN @Codes )";
+                    }
+                    else
+                    {
+                        parameters.Add("Code", codes[0]);
+                        filterQuery = "WHERE ( fixed_asset_code <> @Code )";
+                    }
+                }
+            }
+            string query = $"SELECT * FROM fixed_asset {filterQuery}  ORDER BY modified_date DESC LIMIT @PageSize OFFSET @Offset;";
+            var queryTotalRecord = $"SELECT Count(fixed_asset_code) from fixed_asset {filterQuery}";
+
+            parameters.Add("PageSize", pageSize, DbType.Int16);
+            parameters.Add("Offset", (pageNumber - 1) * pageSize, DbType.Int16);
+            parameters.Add("FilterPattern", $"%{filterString}%", DbType.String);
+
+            var connection = _unitOfWork.Connection;
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
+            var filterAssets = await connection.QueryAsync<FixedAsset>(query, parameters, _unitOfWork.Transaction);
+            long totalRecords = await connection.ExecuteScalarAsync<long>(queryTotalRecord, parameters, _unitOfWork.Transaction);
+
+            FilterFixedAsset filterFixedAsset = new();
+            if (filterAssets.ToList().Count > 0 && totalRecords > 0)
+            {
+                filterFixedAsset.Data = filterAssets;
+                filterFixedAsset.CurrentPage = pageNumber;
+                filterFixedAsset.CurrentPageSize = pageSize;
+                filterFixedAsset.TotalRecord = totalRecords;
+                filterFixedAsset.CurrentRecord = filterAssets.ToList().Count;
+                filterFixedAsset.TotalPage = totalRecords / pageSize + (totalRecords % pageSize == 0 ? 0 : 1);
+            }
+            return filterFixedAsset;
+        }
     }
 }

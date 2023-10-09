@@ -97,6 +97,15 @@ namespace MISA.Web062023.AMIS.Domain.Resources.RecordingAsset {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trùng mã tài sản {0} trong chứng từ có mã {1}.
+        /// </summary>
+        public static string DuplicateRecordedAssetCode {
+            get {
+                return ResourceManager.GetString("DuplicateRecordedAssetCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không có tài sản nào được chọn để chứng từ.
         /// </summary>
         public static string NoAssetSelect {
@@ -120,6 +129,24 @@ namespace MISA.Web062023.AMIS.Domain.Resources.RecordingAsset {
         public static string RecordingNotExist {
             get {
                 return ResourceManager.GetString("RecordingNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không tồn tại nguồn tài sản nào có Id {0}.
+        /// </summary>
+        public static string ResourceBudgetNotExist {
+            get {
+                return ResourceManager.GetString("ResourceBudgetNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giá trị tài sản có mã {0} sau khi ghi tăng bị giảm. Sửa lại..
+        /// </summary>
+        public static string ResourceBudgetValueNotEnough {
+            get {
+                return ResourceManager.GetString("ResourceBudgetValueNotEnough", resourceCulture);
             }
         }
     }

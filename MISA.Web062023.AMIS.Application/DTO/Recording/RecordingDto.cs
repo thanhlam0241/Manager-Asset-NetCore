@@ -13,8 +13,11 @@ namespace MISA.Web062023.AMIS.Application
         public string RecordingCode { get; set; }
         public DateTimeOffset RecordingDate { get; set; }
         public DateTimeOffset ActionDate { get; set; }
+        public int Value { get; set; } = 0;
         public string Description { get; set; }
         public RecordingType RecordingType { get; set; }
+
+        public List<RecordedAssetDto> Assets { get; set; }
 
         public string GetCode()
         {

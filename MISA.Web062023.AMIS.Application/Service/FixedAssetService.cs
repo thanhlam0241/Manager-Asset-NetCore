@@ -267,5 +267,20 @@ namespace MISA.Web062023.AMIS.Application
             string excelName = $"Assets-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
             return stream;
         }
+
+        /// <summary>
+        /// The get filter except code async.
+        /// </summary>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="pageNumber">The page number.</param>
+        /// <param name="filterString">The filter string.</param>
+        /// <param name="codes">The codes.</param>
+        /// <returns>The result.</returns>
+        /// Created by: NTLam (20/8/2023)
+        public async Task<FilterFixedAsset> GetFilterExceptCodeAsync(int pageSize, int pageNumber, string filterString, List<string>? codes)
+        {
+            var result = await _fixedAssetRepository.GetFilterExceptCodesAsync(pageSize, pageNumber, filterString, codes);
+            return result;
+        }
     }
 }

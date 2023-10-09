@@ -25,5 +25,11 @@ namespace MISA.Web062023.AMIS.Domain
         /// </summary>
         /// Created by: NTLam (12/08/2023)
         public List<Guid>? FixedAssetCategoryIds { get; set; }
+
+        /// <summary>
+        /// Gets or Sets the code excepts.
+        /// </summary>
+        /// Created by: NTLam (12/08/2023)
+        public List<string>? CodeExcepts { get; set; }
     }
 }

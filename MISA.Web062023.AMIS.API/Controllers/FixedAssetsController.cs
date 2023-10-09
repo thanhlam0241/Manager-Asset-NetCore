@@ -36,6 +36,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         {
             _fixedAssetService = fixedAssetService;
         }
+
         /// <summary>
         /// The get filter assets.
         /// </summary>
@@ -45,7 +46,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// Created by: NTLam (10/8/2023)
         [HttpPost("filter")]
         public async Task<IActionResult> GetFilterAssets([FromBody] FilterFixedAssetRequest requestFilter
-            ,[FromQuery] int pageSize = 20, [FromQuery] int pageNumber = 1, [FromQuery] string filterString = ""  )
+            , [FromQuery] int pageSize = 20, [FromQuery] int pageNumber = 1, [FromQuery] string filterString = "")
         {
             if (pageSize <= 0)
             {
@@ -56,9 +57,34 @@ namespace MISA.Web062023.AMIS.API.Controllers
                 return BadRequest(Domain.Resources.FixedAsset.FixedAsset.PageNumberLessThanZero);
             }
             var filterResponse = await _fixedAssetService.GetFilterAssetsAsync(pageSize, pageNumber, filterString, requestFilter.DepartmentIds, requestFilter.FixedAssetCategoryIds);
-           
+
             return Ok(filterResponse);
         }
+
+        /// <summary>
+        /// The get filter assets.
+        /// </summary>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="pageNumber">The page number.</param>
+        /// <returns>The result.</returns>
+        /// Created by: NTLam (10/8/2023)
+        [HttpPost("filter-except")]
+        public async Task<IActionResult> GetFilterExceptAssets([FromBody] FilterFixedAssetRequest requestFilter
+            , [FromQuery] int pageSize = 20, [FromQuery] int pageNumber = 1, [FromQuery] string filterString = "")
+        {
+            if (pageSize <= 0)
+            {
+                return BadRequest(Domain.Resources.FixedAsset.FixedAsset.PageSizeLessThanZero);
+            }
+            if (pageNumber <= 0)
+            {
+                return BadRequest(Domain.Resources.FixedAsset.FixedAsset.PageNumberLessThanZero);
+            }
+            var filterResponse = await _fixedAssetService.GetFilterExceptCodeAsync(pageSize, pageNumber, filterString, requestFilter.CodeExcepts);
+
+            return Ok(filterResponse);
+        }
+
 
         /// <summary>
         /// The get new code.

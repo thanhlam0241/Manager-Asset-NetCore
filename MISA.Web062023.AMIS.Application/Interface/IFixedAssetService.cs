@@ -68,6 +68,17 @@ namespace MISA.Web062023.AMIS.Application
         public Task<FilterFixedAsset> GetFilterAssetsAsync(int pageSize, int pageNumber, string filterString, List<Guid>? departmentId, List<Guid>? fixedAssetCategoryId);
 
         /// <summary>
+        /// The get filter except code async.
+        /// </summary>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="pageNumber">The page number.</param>
+        /// <param name="filterString">The filter string.</param>
+        /// <param name="codes">The codes.</param>
+        /// <returns>The result.</returns>
+        /// Created by: Nguyễn Thanh Lâm (10/8/2023)
+        public Task<FilterFixedAsset> GetFilterExceptCodeAsync(int pageSize, int pageNumber, string filterString, List<string>? codes);
+
+        /// <summary>
         /// The get file export.
         /// </summary>
         /// <param name="lists">The lists.</param>

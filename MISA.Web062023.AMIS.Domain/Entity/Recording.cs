@@ -13,9 +13,9 @@ namespace MISA.Web062023.AMIS.Domain
         public string RecordingCode { get; set; }
         public DateTimeOffset RecordingDate { get; set; }
         public DateTimeOffset ActionDate { get; set; }
+        public int Value { get; set; } = 0;
         public string Description { get; set; }
         public RecordingType RecordingType { get; set; }
-
         public Guid GetId()
         {
             return RecordingId;

@@ -13,6 +13,7 @@ namespace MISA.Web062023.AMIS.Application
         /// The get new code.
         /// </summary>
         /// <returns>The result.</returns>
+        /// Created by: NTLa (15/09/2023)
         public Task<string> GetNewCode();
 
         /// <summary>
@@ -22,6 +23,7 @@ namespace MISA.Web062023.AMIS.Application
         /// <param name="pageIndex">The page index.</param>
         /// <param name="pageSize">The page size.</param>
         /// <returns>The result.</returns>
-        public Task<FilterData<Recording>> GetFilterData(int pageSize, int pageNumber, string filter);
+        /// Created by: NTLa (15/09/2023)
+        public Task<FilterData<Recording>> GetFilterDataAsync(int pageSize, int pageNumber, string filter);
     }
 }

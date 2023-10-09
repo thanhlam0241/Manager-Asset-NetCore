@@ -25,6 +25,7 @@ namespace MISA.Web062023.AMIS.Infrastructure
         /// </summary>
         /// <param name="filter">The filter.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         public async Task<FilterData<Recording>> GetFilterRecording(int pageSize, int pageNumber, string filter)
         {
             var parameters = new DynamicParameters();
@@ -62,9 +63,10 @@ namespace MISA.Web062023.AMIS.Infrastructure
         /// The generate code.
         /// </summary>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         public Task<string> GenerateCode()
         {
-            var sql = "SELECT MAX(fixed_asset_code) FROM recording WHERE recording_code RLIKE '^GT[0-9]{6}$' ";
+            var sql = "SELECT MAX(recording_code) FROM recording WHERE recording_code RLIKE '^GT[0-9]{6}$' ";
             var connection = _unitOfWork.Connection;
             var code = connection.ExecuteScalar<string>(sql);
             if (code == null)

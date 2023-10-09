@@ -19,15 +19,15 @@ namespace MISA.Web062023.AMIS.Infrastructure
 
         public async Task<int> DeleteMultipleAsync(List<int> ids)
         {
-            var sql = $"DELETE FROM ResourceAsset WHERE ResourceAssetId IN @Ids";
-            var parameters = new { Ids = ids };
+            var sql = $"DELETE FROM resource_asset WHERE resource_asset_id IN @Ids";
+            var parameters = new { Ids = $"({string.Join(", ",ids)})" };
             var result = await _unitOfWork.Connection.ExecuteAsync(sql, parameters, _unitOfWork.Transaction);
             return result;
         }
 
         public async Task<int> DeleteOneAsync(int id)
         {
-            var sql = $"DELETE FROM ResourceAsset WHERE ResourceAssetId = @Id";
+            var sql = $"DELETE FROM resource_asset WHERE resource_asset_id = @Id";
             var parameters = new { Id = id };
             var result = await _unitOfWork.Connection.ExecuteAsync(sql, parameters, _unitOfWork.Transaction);
             return result;

@@ -5,12 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MISA.Web062023.AMIS.Domain
+namespace MISA.Web062023.AMIS.Application
 {
-    public class ResourceBudget : BaseAuditEntity, IEntity
+    public class ResourceBudgetCreateDto : IBaseDto
     {
-        [Required]
-        public Guid ResourceBudgetId { get; set; }
 
         [Required]
         public string ResourceBudgetCode { get; set; }
@@ -19,14 +17,14 @@ namespace MISA.Web062023.AMIS.Domain
         [MaxLength(255)]
         public string ResourceBudgetName { get; set; }
 
-        public Guid GetId()
+        public string GetCode()
         {
-            return ResourceBudgetId;
+            return ResourceBudgetCode;
         }
 
-        public void SetId(Guid id)
+        public void SetCode(string code)
         {
-            ResourceBudgetId = id;
+            ResourceBudgetCode = code;
         }
     }
 }

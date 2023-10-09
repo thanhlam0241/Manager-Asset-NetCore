@@ -129,6 +129,9 @@
   <data name="DuplicateCode" xml:space="preserve">
     <value>Mã {0} đã tồn tại.</value>
   </data>
+  <data name="DuplicateRecordedAssetCode" xml:space="preserve">
+    <value>Trùng mã tài sản {0} trong chứng từ có mã {1}</value>
+  </data>
   <data name="NoAssetSelect" xml:space="preserve">
     <value>Không có tài sản nào được chọn để chứng từ</value>
   </data>
@@ -137,5 +140,11 @@
   </data>
   <data name="RecordingNotExist" xml:space="preserve">
     <value>Chứng từ với id {0} không tồn tại !!</value>
+  </data>
+  <data name="ResourceBudgetNotExist" xml:space="preserve">
+    <value>Không tồn tại nguồn tài sản nào có Id {0}</value>
+  </data>
+  <data name="ResourceBudgetValueNotEnough" xml:space="preserve">
+    <value>Giá trị tài sản có mã {0} sau khi ghi tăng bị giảm. Sửa lại.</value>
   </data>
 </root>

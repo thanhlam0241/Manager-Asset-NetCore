@@ -70,7 +70,7 @@ namespace MISA.Web062023.AMIS.Domain.Resources.Department {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Không tìm thấy phòng ban với Id.
+        ///   Looks up a localized string similar to Không tìm thấy phòng ban với Id {0}.
         /// </summary>
         public static string DepartmentIdNotFound {
             get {

@@ -51,6 +51,17 @@
         public Task<FilterFixedAsset> GetFilterAssetsAsync(int pageSize, int pageNumber, string filter, List<Guid>? departmantId, List<Guid>? fixedAssetCategoryId);
 
         /// <summary>
+        /// The get filter except codes async.
+        /// </summary>
+        /// <param name="pageSize">The page size.</param>
+        /// <param name="pageNumber">The page number.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="codes">The codes.</param>
+        /// <returns>The result.</returns>
+        /// Created by: Nguyễn Thanh Lâm 10/8/2023
+        public Task<FilterFixedAsset> GetFilterExceptCodesAsync(int pageSize, int pageNumber, string filter, List<string>? codes);
+
+        /// <summary>
         /// The get all filter asset async.
         /// </summary>
         /// <param name="filter">The filter.</param>

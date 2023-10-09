@@ -121,7 +121,7 @@
     <value>Id phòng ban đã tồn tại</value>
   </data>
   <data name="DepartmentIdNotFound" xml:space="preserve">
-    <value>Không tìm thấy phòng ban với Id</value>
+    <value>Không tìm thấy phòng ban với Id {0}</value>
   </data>
   <data name="DepartmentNameExist" xml:space="preserve">
     <value>Tên phòng ban đã được sử dụng</value>

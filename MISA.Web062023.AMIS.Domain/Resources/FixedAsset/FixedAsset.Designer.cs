@@ -79,6 +79,15 @@ namespace MISA.Web062023.AMIS.Domain.Resources.FixedAsset {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Không tồn tại tài sản cố định với mã {0}..
+        /// </summary>
+        public static string FixedAssetCodeNotExist {
+            get {
+                return ResourceManager.GetString("FixedAssetCodeNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không tồn tại tài sản với id {0}.
         /// </summary>
         public static string FixedAssetIdNotExist {

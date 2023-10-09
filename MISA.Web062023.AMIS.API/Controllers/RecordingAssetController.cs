@@ -28,9 +28,9 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// <param name="id">The id.</param>
         /// <returns>The result.</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAssetOfRecordingAsync([FromRoute] Guid id)
+        public async Task<IActionResult> GetRecordingAsync([FromRoute] Guid id)
         {
-            var result = await _recordingAssetService.GetAssetsByRecordingIdAsync(id);
+            var result = await _recordingAssetService.GetRecordingAsync(id);
             return StatusCode(StatusCodes.Status200OK, result);
         }
 

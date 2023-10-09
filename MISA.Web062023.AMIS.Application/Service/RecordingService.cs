@@ -35,7 +35,7 @@ namespace MISA.Web062023.AMIS.Application
         /// <param name="pageIndex">The page index.</param>
         /// <param name="pageSize">The page size.</param>
         /// <returns>The result.</returns>
-        public async Task<FilterData<Recording>> GetFilterData(int pageSize, int pageNumber, string filter)
+        public async Task<FilterData<Recording>> GetFilterDataAsync(int pageSize, int pageNumber, string filter)
         {
             var result = await _recordingRepository.GetFilterRecording(pageSize, pageNumber, filter);
             return result;

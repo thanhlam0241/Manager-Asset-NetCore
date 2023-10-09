@@ -123,6 +123,9 @@
   <data name="FixedAssetCodeExist" xml:space="preserve">
     <value>Mã tài sản {0} đã tồn tại</value>
   </data>
+  <data name="FixedAssetCodeNotExist" xml:space="preserve">
+    <value>Không tồn tại tài sản cố định với mã {0}.</value>
+  </data>
   <data name="FixedAssetIdNotExist" xml:space="preserve">
     <value>Không tồn tại tài sản với id {0}</value>
   </data>

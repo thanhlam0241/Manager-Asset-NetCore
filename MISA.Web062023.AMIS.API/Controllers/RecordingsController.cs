@@ -31,7 +31,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         [HttpGet("filter")]
         public async Task<IActionResult> GetFilterData([FromQuery] int pageSize = 20, [FromQuery] int pageNumber = 1, [FromQuery] string filterString = "")
         {
-            var result = await _recordingService.GetFilterData(pageSize, pageNumber, filterString);
+            var result = await _recordingService.GetFilterDataAsync(pageSize, pageNumber, filterString);
             return Ok(result);
         }
 

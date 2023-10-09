@@ -13,6 +13,10 @@ namespace MISA.Web062023.AMIS.Application
         public RecordedAssetProfile()
         {
             CreateMap<RecordedAssetCreateDto, RecordedAsset>();
+
+            CreateMap<RecordedAsset, RecordedAssetDto>();
+
+            CreateMap<RecordedAssetUpdateDto, RecordedAsset>();
         }
     }
 }

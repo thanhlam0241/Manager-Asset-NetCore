@@ -14,6 +14,7 @@ namespace MISA.Web062023.AMIS.Infrastructure
     /// <summary>
     /// The recording assets repository.
     /// </summary>
+    /// Created by: NTLam (19/8/2023)
     public class RecordingAssetsRepository : IRecordingAssetsRepository
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -22,10 +23,11 @@ namespace MISA.Web062023.AMIS.Infrastructure
         private readonly IRecordedAssetRepository _recordedAssetRepository;
 
         /// <summary>
-        /// The .ctor.
+        /// The constructor
         /// </summary>
         /// <param name="unitOfWork">The unit of work.</param>
         /// <param name="recordingRepository">The recording repository.</param>
+        /// Created by: NTLam (19/8/2023)
         public RecordingAssetsRepository(IUnitOfWork unitOfWork, IRecordingRepository recordingRepository, IResourceAssetRepository resourceAssetRepository, IRecordedAssetRepository recordedAssetRepository)
         {
             _unitOfWork = unitOfWork;
@@ -34,6 +36,13 @@ namespace MISA.Web062023.AMIS.Infrastructure
             _recordedAssetRepository = recordedAssetRepository;
         }
 
+        /// <summary>
+        /// The delete recording assets async.
+        /// </summary>
+        /// <param name="recordingId">The recording id.</param>
+        /// <param name="assetIds">The asset ids.</param>
+        /// <returns>The result.</returns>
+        /// Created by: NTLam (19/8/2023)
         public Task<int> DeleteRecordingAssetsAsync(Guid recordingId, List<Guid> assetIds)
         {
             throw new NotImplementedException();
@@ -44,59 +53,45 @@ namespace MISA.Web062023.AMIS.Infrastructure
         /// </summary>
         /// <param name="recordingId">The recording id.</param>
         /// <returns>The result.</returns>
-        public async Task<IEnumerable<RecordedAsset>> GetRecordingAssetsAsync(Guid recordingId)
+        /// Created by: NTLam (19/8/2023)
+        public async Task<List<RecordedAsset>> GetRecordingAssetsAsync(Guid recordingId)
         {
             var parameters = new DynamicParameters();
             parameters.Add("RecordingId", recordingId);
             var sqlQueryAssets = """
-                WITH RecordingAssets AS (
-                    SELECT
-                        asset
-                    FROM
-                        recording_asset
-                    WHERE
-                        recording = @RecordingId
-                )
                 SELECT 
-                recorded_asset.recorded_asset_id as recorded_asset_id, recorded_asset_code, recorded_asset_name, recorded_asset.value, depreciation_rate, recording_type,
-                department.department_id, department_code, department_name, description,
+                recorded_asset.recorded_asset_id as recorded_asset_id, recorded_asset_code, recorded_asset_name,department_name, recorded_asset.value, depreciation_rate, 
                 resource_asset.resource_asset_id, resource_asset.cost,
-                resource_budget.resource_budget_id, resource_budget_code, resource_budget_name
-                FROM recorded_asset 
-                JOIN RecordingAssets ON RecordingAssets.asset = recorded_asset.recorded_asset_id
-                JOIN department ON recorded_asset.department_id = department.department_id
+                resource_budget.resource_budget_id, resource_budget_code, resource_budget_name,
+                recording.recording_id, recording_code, recording_date, action_date, recording.value, description, recording_type
+                FROM recorded_asset
                 JOIN resource_asset ON recorded_asset.recorded_asset_id = resource_asset.recorded_asset_id
                 JOIN resource_budget ON resource_asset.resource_budget_id = resource_budget.resource_budget_id
+                JOIN recording ON recorded_asset.recording_id = recording.recording_id
+                WHERE recorded_asset.recording_id = @RecordingId
                 """;
 
             DefaultTypeMap.MatchNamesWithUnderscores = true;
             var listAssets1 = await _unitOfWork.Connection.QueryAsync(sqlQueryAssets, parameters);
             DefaultTypeMap.MatchNamesWithUnderscores = true;
-            var listAssets = await _unitOfWork.Connection.QueryAsync<RecordedAsset, Department, ResourceAsset, ResourceBudget, RecordedAsset>(sqlQueryAssets, (asset, department, resourceAsset, resourceBudget) =>
+            var listAssets = await _unitOfWork.Connection.QueryAsync<RecordedAsset, ResourceAsset, ResourceBudget, Recording, RecordedAsset>(sqlQueryAssets, (asset, resourceAsset, resourceBudget, recording) =>
             {
-                asset.Department = department;
                 resourceAsset.ResourceBudget = resourceBudget;
                 asset.ResourceAssets.Add(resourceAsset);
+                asset.Recording = recording;
                 return asset;
             }
-                , parameters, splitOn: "department_id, resource_asset_id, resource_budget_id");
-
-            var result1 = listAssets.GroupBy(a => a.RecordedAssetId);
+                , parameters, splitOn: "resource_asset_id, resource_budget_id, recording_id");
 
             var result = listAssets.GroupBy(a => a.RecordedAssetId).Select(
-                a =>
-                {
-                    var groupResourceAssets = a.First();
-                    groupResourceAssets.ResourceAssets = a.Select(ra => ra.ResourceAssets.First()).ToList();
-                    return groupResourceAssets;
-                });
-
-            if (!result.Any())
-            {
-                throw new NotFoundException(string.Format(Domain.Resources.RecordingAsset.RecordingAsset.NoAssetWithRecording, recordingId));
-            }
-
-            return result;
+                    a =>
+                    {
+                        var asset = a.First();
+                        asset.ResourceAssets = a.Select(ra => ra.ResourceAssets.First()).ToList();
+                        return asset;
+                    }
+                );
+            return result.ToList();
 
         }
 
@@ -105,43 +100,30 @@ namespace MISA.Web062023.AMIS.Infrastructure
         /// </summary>
         /// <param name="recordingAssets">The recording assets.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (19/8/2023)
         public async Task<int> InsertRecordingAssetsAsync(RecordingAsset recordingAssets)
         {
             var recording = recordingAssets.Recording;
             var assets = recordingAssets.Assets;
 
-            List<dynamic> lists = new List<dynamic>();
-
-            foreach (RecordedAsset asset in assets)
-            {
-                lists.Add(new
-                {
-                    Asset = asset.RecordedAssetId,
-                    Recording = recording.RecordingId
-                });
-            }
-
             List<dynamic> paramInsertRecordedAssets = new();
             foreach (var asset in assets)
             {
-                if (asset.Department == null)
-                {
-                    throw new Exception("Tài sản phải có bộ phận sử dụng.");
-                }
                 paramInsertRecordedAssets.Add(new
                 {
                     asset.RecordedAssetId,
                     asset.RecordedAssetCode,
                     asset.RecordedAssetName,
-                    asset.Department.DepartmentId,
+                    asset.DepartmentName,
                     asset.Value,
+                    recording.RecordingId,
                     asset.DepreciationRate
                 });
             }
 
             var sqlInsertRecording = """
-                INSERT INTO recording (recording_id,recording_code,recording_date,action_date,description,recording_type) 
-                    VALUES (@RecordingId, @RecordingCode, @RecordingDate, @ActionDate, @Description,1)
+                INSERT INTO recording (recording_id,recording_code,recording_date,action_date,value,description,recording_type) 
+                    VALUES (@RecordingId, @RecordingCode, @RecordingDate, @ActionDate,@Value, @Description,1)
                 """;
 
             var parametersInsertRecording = new DynamicParameters();
@@ -150,11 +132,12 @@ namespace MISA.Web062023.AMIS.Infrastructure
             parametersInsertRecording.Add("RecordingDate", recording.RecordingDate);
             parametersInsertRecording.Add("ActionDate", recording.ActionDate);
             parametersInsertRecording.Add("Description", recording.Description);
+            parametersInsertRecording.Add("Value", recording.Value);
 
 
-            var sqlInsertRecordedAsset = """
-                INSERT INTO recorded_asset (recorded_asset_id, recorded_asset_code, recorded_asset_name, department_id, value, depreciation_rate, recording_type) 
-                    VALUES (@RecordedAssetId, @RecordedAssetCode, @RecordedAssetName, @DepartmentId, @Value, @DepreciationRate, 1)
+            var sqlInsertRecordedAsset = $"""
+                INSERT INTO recorded_asset (recorded_asset_id, recorded_asset_code, recorded_asset_name, recording_id, department_name, value, depreciation_rate) 
+                    VALUES (@RecordedAssetId, @RecordedAssetCode, @RecordedAssetName, @RecordingId ,@DepartmentName, @Value, @DepreciationRate)
                 """;
 
             var sqlInsertResourceAsset = """
@@ -162,24 +145,14 @@ namespace MISA.Web062023.AMIS.Infrastructure
                                          VALUES (@ResourceBudget, @AssetId, @Cost)
                                          """;
 
-            var sqlInsertRecordingAsset = "INSERT INTO recording_asset (asset, recording) VALUES (@Asset, @Recording)";
-
-            using var connectionInsertRecording = _unitOfWork.DbConnection();
-            connectionInsertRecording.Open();
-            using var transactionInsertRecording = connectionInsertRecording.BeginTransaction();
-            var resultInsertRecording = await connectionInsertRecording.ExecuteAsync(sqlInsertRecording, parametersInsertRecording, transactionInsertRecording);
+            var resultInsertRecording = await _unitOfWork.Connection.ExecuteAsync(sqlInsertRecording, parametersInsertRecording, _unitOfWork.Transaction);
             if (resultInsertRecording == 1)
             {
                 try
                 {
-                    transactionInsertRecording.Commit();
-                    using var connectionInsertRecordedAsset = _unitOfWork.DbConnection();
-                    connectionInsertRecordedAsset.Open();
-                    using var transactionInsertRecordedAsset = connectionInsertRecordedAsset.BeginTransaction();
-                    var resultInsertRecordedAsset = await connectionInsertRecordedAsset.ExecuteAsync(sqlInsertRecordedAsset, paramInsertRecordedAssets, transactionInsertRecordedAsset);
+                    var resultInsertRecordedAsset = await _unitOfWork.Connection.ExecuteAsync(sqlInsertRecordedAsset, paramInsertRecordedAssets, _unitOfWork.Transaction);
                     if (resultInsertRecordedAsset == assets.Count)
                     {
-                        transactionInsertRecordedAsset.Commit();
                         List<dynamic> resourceAssets = new List<dynamic>();
                         foreach (RecordedAsset asset in assets)
                         {
@@ -187,7 +160,7 @@ namespace MISA.Web062023.AMIS.Infrastructure
                             {
                                 if (ra.ResourceBudget == null)
                                 {
-                                    throw new Exception("Lỗi");
+                                    throw new Exception("Mỗi tài sản phải có nguồn hình thành.");
                                 }
                                 resourceAssets.Add(new
                                 {
@@ -197,138 +170,25 @@ namespace MISA.Web062023.AMIS.Infrastructure
                                 });
                             }
                         }
-                        using var connectionInsertResourceAsset = _unitOfWork.DbConnection();
-                        connectionInsertResourceAsset.Open();
-                        using var transactionInsertResourceAsset = connectionInsertResourceAsset.BeginTransaction();
-                        try
+                        var resultInsertResourceAsset = await _unitOfWork.Connection.ExecuteAsync(sqlInsertResourceAsset, resourceAssets, _unitOfWork.Transaction);
+                        if (resultInsertResourceAsset == resourceAssets.Count)
                         {
-                            var resultInsertResourceAsset = await connectionInsertResourceAsset.ExecuteAsync(sqlInsertResourceAsset, resourceAssets, transactionInsertResourceAsset);
-                            if (resultInsertResourceAsset == resourceAssets.Count)
-                            {
-                                transactionInsertResourceAsset.Commit();
-                                var connectionInsertRecordingAsset = _unitOfWork.DbConnection();
-                                connectionInsertRecordingAsset.Open();
-                                var transactionInsertRecordingAsset = connectionInsertRecordingAsset.BeginTransaction();
-                                try
-                                {
-                                    var resultInsertRecordingAsset = await connectionInsertRecordingAsset.ExecuteAsync(sqlInsertRecordingAsset, lists, transactionInsertRecordingAsset);
-                                    if (resultInsertRecordingAsset == lists.Count)
-                                    {
-                                        transactionInsertRecordingAsset.Commit();
-                                        connectionInsertResourceAsset.Close();
-                                        connectionInsertRecordedAsset.Close();
-                                        connectionInsertRecording.Close();
-                                        connectionInsertRecordingAsset.Close();
-                                        return 1;
-                                    }
-                                    else
-                                    {
-                                        transactionInsertResourceAsset.Rollback();
-                                        transactionInsertRecordedAsset.Rollback();
-                                        transactionInsertRecording.Rollback();
-                                        connectionInsertResourceAsset.Close();
-                                        connectionInsertRecordedAsset.Close();
-                                        connectionInsertRecording.Close();
-                                        connectionInsertRecordingAsset.Close();
-                                        return 0;
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    transactionInsertResourceAsset.Rollback();
-                                    connectionInsertResourceAsset.Close();
-                                    throw new Exception(ex.Message);
-                                }
-                            }
-                            else
-                            {
-                                transactionInsertResourceAsset.Rollback();
-                                transactionInsertRecordedAsset.Rollback();
-                                transactionInsertRecording.Rollback();
-                                connectionInsertResourceAsset.Close();
-                                connectionInsertRecordedAsset.Close();
-                                connectionInsertRecording.Close();
-                                return 0;
-                            }
+                            return 1;
                         }
-                        catch (Exception ex)
-                        {
-                            transactionInsertResourceAsset.Rollback();
-                            connectionInsertRecordedAsset.Close();
-                            throw new Exception(ex.Message);
-                        }
-                    }
-                    else
-                    {
-                        transactionInsertRecording.Rollback();
-                        connectionInsertRecording.Close();
-                        connectionInsertRecordedAsset.Close();
-                        return 0;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    transactionInsertRecording.Rollback();
-                    connectionInsertRecording.Close();
-                    throw new Exception(ex.Message);
-                }
-            }
-            return 0;
-
-        }
-
-        public async Task<int> InsertMatchTable(RecordingAsset recordingAssets)
-        {
-            var sqlInsertRecordingAsset = "INSERT INTO recording_asset (asset, recording) VALUES (@Asset, @Recording)";
-            List<dynamic> lists = new List<dynamic>();
-            var assets = recordingAssets.Assets;
-            var recording = recordingAssets.Recording;
-
-            foreach (RecordedAsset asset in assets)
-            {
-                lists.Add(new
-                {
-                    Asset = asset.RecordedAssetId,
-                    Recording = recording.RecordingId
-                });
-            }
-
-            var resultInsertRecordingAsset = await _unitOfWork.Connection.ExecuteAsync(sqlInsertRecordingAsset, lists, _unitOfWork.Transaction);
-            return resultInsertRecordingAsset;
-        }
-
-        public async Task<int> InsertRecordingAssetsWithoutTransactionAsync(RecordingAsset recordingAssets)
-        {
-            var recording = recordingAssets.Recording;
-            var assets = recordingAssets.Assets;
-
-            List<dynamic> lists = new List<dynamic>();
-
-            foreach (RecordedAsset asset in assets)
-            {
-                lists.Add(new
-                {
-                    Asset = asset.RecordedAssetId,
-                    Recording = recording.RecordingId
-                });
-            }
-
-            var resultInsertRecording = await _recordingRepository.InsertAsync(recording);
-            if (resultInsertRecording > 0)
-            {
-                var resultInsertRecordedAsset = await _recordedAssetRepository.InsertMultipleAsync(assets);
-                if (resultInsertRecordedAsset > 0)
-                {
-                    foreach (RecordedAsset asset in assets)
-                    {
-                        var res = await _resourceAssetRepository.InsertMultipleAsync(asset.RecordedAssetId, asset.ResourceAssets);
-                        if (res == 0)
+                        else
                         {
                             return 0;
                         }
                     }
-                    var result = await InsertMatchTable(recordingAssets);
-                    return result > 0 ? 1 : 0;
+                    else
+                    {
+                        return 0;
+                    }
+                }
+                catch (Exception e)
+                {
+                    var res = await _recordingRepository.DeleteAsync(recording.RecordingId);
+                    if (res > 0) return 0;
                 }
             }
             return 0;
@@ -340,18 +200,20 @@ namespace MISA.Web062023.AMIS.Infrastructure
         /// </summary>
         /// <param name="recordingAssets">The recording assets.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (19/8/2023)
         public Task<int> UpdateRecordingAssets(RecordingAsset recordingAssets)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// The update recording assets.
+        /// The update recording assets async.
         /// </summary>
         /// <param name="recordingId">The recording id.</param>
-        /// <param name="assetIds">The asset ids.</param>
+        /// <param name="assets">The assets.</param>
         /// <returns>The result.</returns>
-        public Task<int> UpdateRecordingAssetsAsync(Guid recordingId, List<Guid> assetIds)
+        /// Created by: NTLam (19/8/2023)
+        public Task<bool> UpdateRecordingAssetsAsync(Guid recordingId, List<RecordedAsset> assets)
         {
             throw new NotImplementedException();
         }
