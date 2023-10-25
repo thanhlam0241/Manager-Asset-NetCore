@@ -23,6 +23,14 @@
         Task<IEnumerable<TEntity>> GetByListIdAsync(List<Guid> ids);
 
         /// <summary>
+        /// The get list entities by list code.
+        /// </summary>
+        /// <param name="codes">The codes.</param>
+        /// <returns>The result.</returns>
+        /// Created by: NTLam (14/08/2023)
+        Task<IEnumerable<TEntity>> GetListEntitiesByListCode(List<string> codes);
+
+        /// <summary>
         /// The get by list code async.
         /// </summary>
         /// <param name="codes">The codes.</param>

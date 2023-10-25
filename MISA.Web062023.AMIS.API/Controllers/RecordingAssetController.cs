@@ -17,6 +17,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// The .ctor.
         /// </summary>
         /// <param name="recordingAssetService">The recording asset service.</param>
+        /// Created by: NTLam (15/09/2023)
         public RecordingAssetController(IRecordingAssetService recordingAssetService)
         {
             _recordingAssetService = recordingAssetService;
@@ -27,6 +28,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (15/09/2023)
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRecordingAsync([FromRoute] Guid id)
         {
@@ -35,10 +37,28 @@ namespace MISA.Web062023.AMIS.API.Controllers
         }
 
         /// <summary>
+        /// The update recording.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <param name="recordingUpdateDto">The recording update dto.</param>
+        /// <returns>The result.</returns>
+        /// Created by: NTLam (15/09/2023)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRecording([FromRoute] Guid id, [FromBody] RecordingUpdateDto recordingUpdateDto)
+        {
+            var result = await _recordingAssetService.UpdateRecordingAsync(id, recordingUpdateDto);
+            if (result)
+            {
+                return StatusCode(StatusCodes.Status202Accepted, "Sửa thành công chứng từ");
+            }
+            return StatusCode(StatusCodes.Status501NotImplemented, "Sửa thất bại chứng từ");
+        }
+        /// <summary>
         /// The create recording.
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (15/09/2023)
         [HttpPost]
         public async Task<IActionResult> CreateRecording([FromBody] CreateRecordingRequest request)
         {

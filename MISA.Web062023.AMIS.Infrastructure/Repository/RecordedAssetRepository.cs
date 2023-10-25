@@ -58,8 +58,10 @@ namespace MISA.Web062023.AMIS.Infrastructure
         public async Task<RecordedAsset> GetAssetAsync(Guid id)
         {
             var sql = """
-                SELECT recorded_asset_id, recorded_asset_code, recorded_asset_name, department_name, value, depreciation_rate
+                SELECT recorded_asset_id, recorded_asset_code, recorded_asset_name, department_name, recorded_asset.value, depreciation_rate,
+                recording.recording_id, recording_code, recording_date, action_date, recording.value, description, recording_type
                 FROM recorded_asset
+                LEFT JOIN recording ON recorded_asset.recording_id = recording.recording_id
                 WHERE recorded_asset_id = @RecordedAssetId
                 """;
             var sqlSelectResource = """
@@ -72,8 +74,12 @@ namespace MISA.Web062023.AMIS.Infrastructure
                 """;
             var param = new { RecordedAssetId = id };
             DefaultTypeMap.MatchNamesWithUnderscores = true;
-            var result = await _unitOfWork.Connection.QueryFirstOrDefaultAsync<RecordedAsset>(sql, param)
+            var resultList = await _unitOfWork.Connection.QueryAsync<RecordedAsset,Recording, RecordedAsset>(sql, (recordedAsset, recording) => { 
+                recordedAsset.Recording = recording;
+                return recordedAsset;
+            } ,param,splitOn: "recording_id")
                 ?? throw new NotFoundException("Không tìm thấy tài sản chứng từ");
+            var result = resultList.First();
             var resultResourceAssets = await _unitOfWork.Connection.QueryAsync<ResourceAsset, ResourceBudget, ResourceAsset>(sqlSelectResource, (resourceAsset, resourceBudget) =>
             {
                 resourceAsset.ResourceBudget = resourceBudget;
@@ -167,12 +173,16 @@ namespace MISA.Web062023.AMIS.Infrastructure
         /// Created by: NTLam (19/8/2023)
         public async Task<int> UpdateRecordedAsset(Guid assetId, List<ResourceAsset> resources)
         {
+            var newValue = resources.Sum(i => i.Cost);
             var sql = """
                 INSERT INTO resource_asset (resource_budget_id,recorded_asset_id,cost)
                                     VALUES (@ResourceBudgetId,@RecordedAssetId,@Cost)
                 """;
             var sqlUpdate = """
                 UPDATE resource_asset SET cost = @Cost  WHERE resource_asset_id = @ResourceAssetId
+                """;
+            var sqlUpdateRecordedAsset = """
+                UPDATE recorded_asset SET value = @Value WHERE recorded_asset_id = @RecordedAssetId
                 """;
             List<dynamic> paramInserts = new();
             foreach (var resource in resources)
@@ -198,13 +208,27 @@ namespace MISA.Web062023.AMIS.Infrastructure
             var resultUpdate = await _unitOfWork.Connection.ExecuteAsync(sqlUpdate, paramUpdates, transaction: _unitOfWork.Transaction);
             if (resultUpdate > 0)
             {
-                var result = await _unitOfWork.Connection.ExecuteAsync(sql, paramInserts, transaction: _unitOfWork.Transaction);
-                if (result > 0 && paramInserts.Count > 0)
+                if (paramInserts.Count > 0)
                 {
-                    return 1;
+                    var resultUpdateResource = await _unitOfWork.Connection.ExecuteAsync(sql, paramInserts, transaction: _unitOfWork.Transaction);
+                    if (resultUpdateResource > 0) { 
+                    var resultUpdateAsset = await _unitOfWork.Connection.ExecuteAsync(sqlUpdateRecordedAsset, new { Value = newValue, RecordedAssetId = assetId }, transaction: _unitOfWork.Transaction);
+                    if (resultUpdateAsset > 0 && resultUpdateResource > 0)
+                        {
+                            return 1;
+                        }
+                    }
+                }
+                else
+                {
+                    var resultUpdateAsset = await _unitOfWork.Connection.ExecuteAsync(sqlUpdateRecordedAsset, new { Value = newValue, RecordedAssetId = assetId }, transaction: _unitOfWork.Transaction);
+                    if (resultUpdateAsset > 0)
+                    {
+                        return 1;
+                    }
                 }
             }
-            return 1;
+            return 0;
         }
 
         /// <summary>
@@ -231,14 +255,10 @@ namespace MISA.Web062023.AMIS.Infrastructure
         /// Created by: NTLam (19/8/2023)
         public async Task<int> UpdateAsync(RecordedAsset recordedAsset)
         {
-            string sql = "";
-            var newValue = recordedAsset.ResourceAssets.Sum(i => i.Cost);
-            if (newValue != recordedAsset.Value)
-            {
-                sql = """
+            string sql = """
                     UPDATE recorded_asset SET value = @Value WHERE recorded_asset_id = @RecordedAssetId
                     """;
-            }
+            var newValue = recordedAsset.Value;
             var connection = _unitOfWork.Connection;
             connection.Open();
             var transaction = connection.BeginTransaction();

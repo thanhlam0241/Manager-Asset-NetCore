@@ -18,6 +18,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// The .ctor.
         /// </summary>
         /// <param name="accountService">The account service.</param>
+        /// Created by: NTLam (20/08/2023)
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
@@ -28,6 +29,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAccountByIdAsync([FromRoute] Guid id)
         {
@@ -39,6 +41,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// The get all accounts async.
         /// </summary>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpGet]
         public async Task<IActionResult> GetAllAccountsAsync([FromQuery] string username = "", [FromQuery] string email = "", [FromQuery] string phoneNumber = "")
         {
@@ -53,6 +56,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// <param name="pageNumber">The page number.</param>
         /// <param name="filterString">The filter string.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpGet("filter")]
         public async Task<IActionResult> GetFilter([FromQuery] int pageSize = 20, [FromQuery] int pageNumber = 1, [FromQuery] string filterString = "")
         {
@@ -65,6 +69,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// </summary>
         /// <param name="account">The account.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpPost]
         public async Task<IActionResult> CreateAccountAsync([FromBody] AccountCreateDto account)
         {
@@ -83,6 +88,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// <param name="id">The id.</param>
         /// <param name="account">The account.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdateAccountAsync([FromRoute] Guid id, [FromBody] AccountUpdateDto account)
         {
@@ -100,6 +106,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// <param name="id">The id.</param>
         /// <param name="active">The active.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> ChangeStatusAccountAsync([FromRoute] Guid id, [FromQuery] bool active)
         {
@@ -127,6 +134,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// <param name="id">The id.</param>
         /// <param name="active">The active.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpPatch("{id}/reset")]
         public async Task<IActionResult> ResetPasswordAsync([FromRoute] Guid id, [FromBody] string password)
         {
@@ -144,6 +152,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// <param name="id">The id.</param>
         /// <param name="request">The request.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpPatch("{id}/password")]
         public async Task<IActionResult> ChangePasswordAsync([FromRoute] Guid id, [FromBody] ChangePasswordRequest request)
         {
@@ -162,6 +171,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAccountAsync([FromRoute] Guid id)
         {

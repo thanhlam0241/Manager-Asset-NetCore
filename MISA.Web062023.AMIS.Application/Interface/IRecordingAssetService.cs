@@ -42,15 +42,6 @@ namespace MISA.Web062023.AMIS.Application
         public Task<int> DeleteRecordingAsync(Guid recordingId, List<Guid> ids);
 
         /// <summary>
-        /// The insert recording asset.
-        /// </summary>
-        /// <param name="recordingId">The recording id.</param>
-        /// <param name="ids">The ids.</param>
-        /// <returns>The result.</returns>
-        /// Created by: NTLam (15/09/2023)
-        public Task<int> InsertRecordingAsset(Guid recordingId, List<Guid> ids);
-
-        /// <summary>
         /// The update recording.
         /// </summary>
         /// <param name="id">The id.</param>

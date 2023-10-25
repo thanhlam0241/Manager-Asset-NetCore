@@ -13,6 +13,8 @@ namespace MISA.Web062023.AMIS.Application
         [Required]
         public string RecordedAssetCode { get; set; }
 
+        public int? Value { get; set; }
+
         public RecordingType? RecordingType { get; set; }
 
         public List<ResourceAssetCreateDto> ResourceAssets { get; set; } = new List<ResourceAssetCreateDto>();

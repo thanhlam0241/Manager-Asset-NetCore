@@ -12,6 +12,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
     /// <summary>
     /// The auth controller.
     /// </summary>
+    /// Created by: NTLam (20/08/2023)
     [Route("api/v1/[controller]")]
     [ApiController]
     public class AuthenticationController : Controller
@@ -22,6 +23,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// The .ctor.
         /// </summary>
         /// <param name="accountService">The auth service.</param>
+        /// Created by: NTLam (20/08/2023)
         public AuthenticationController(IAccountService accountService)
         {
             _accountService = accountService;
@@ -32,6 +34,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         /// 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
@@ -68,6 +71,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// </summary>
         /// <param name="accountCreate">The account create.</param>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] AccountCreateDto accountCreate)
         {
@@ -83,6 +87,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// The logout.
         /// </summary>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpGet("logout")]
         public async Task<IActionResult> Logout()
         {
@@ -95,6 +100,7 @@ namespace MISA.Web062023.AMIS.API.Controllers
         /// The check login.
         /// </summary>
         /// <returns>The result.</returns>
+        /// Created by: NTLam (20/08/2023)
         [HttpGet("check-login")]
         public IActionResult CheckLogin()
         {

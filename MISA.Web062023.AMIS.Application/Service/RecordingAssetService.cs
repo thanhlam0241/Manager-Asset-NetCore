@@ -22,6 +22,7 @@ namespace MISA.Web062023.AMIS.Application
         private readonly IRecordedAssetRepository _recordedAssetRepository;
         private readonly IResourceBudgetRepository _resourceBudgetRepository;
         private readonly IMapper _mapper;
+        private readonly IRecordingRepository _recordingRepository;
 
         /// <summary>
         /// The .ctor.
@@ -34,7 +35,8 @@ namespace MISA.Web062023.AMIS.Application
         /// <param name="resourceBudgetRepository">The resource budget repository.</param>
         /// Created by: NTLam (19/8/2023)
         public RecordingAssetService(IRecordingAssetsRepository recordingAssetsRepository, IFixedAssetRepository fixedAssetRepository, IRecordingManager recordingManager
-            , IDepartmentRepository departmentRepository, IMapper mapper, IResourceBudgetRepository resourceBudgetRepository, IRecordedAssetRepository recordedAssetRepository)
+            , IDepartmentRepository departmentRepository, IMapper mapper, IResourceBudgetRepository resourceBudgetRepository, IRecordedAssetRepository recordedAssetRepository
+            , IRecordingRepository recordingRepository)
         {
             _recordingAssetsRepository = recordingAssetsRepository;
             _fixedAssetRepository = fixedAssetRepository;
@@ -43,6 +45,7 @@ namespace MISA.Web062023.AMIS.Application
             _mapper = mapper;
             _resourceBudgetRepository = resourceBudgetRepository;
             _recordedAssetRepository = recordedAssetRepository;
+            _recordingRepository = recordingRepository;
         }
 
         /// <summary>
@@ -70,7 +73,8 @@ namespace MISA.Web062023.AMIS.Application
             {
                 RecordedAssetId = Guid.NewGuid(),
                 RecordedAssetCode = recordedAssetCreate.RecordedAssetCode,
-                RecordingType = recordedAssetCreate.RecordingType
+                RecordingType = recordedAssetCreate.RecordingType,
+                Value = recordedAssetCreate.Value,
             };
             return recordedAsset;
         }
@@ -90,39 +94,41 @@ namespace MISA.Web062023.AMIS.Application
 
             var listRecordedAsset = new List<RecordedAsset>();
 
+            var listFixedAsset = await _fixedAssetRepository.GetListEntitiesByListCode(assets.Select(x => x.RecordedAssetCode).ToList());
+            var listResourceBudget = await _resourceBudgetRepository.GetByListIdAsync(assets.SelectMany(x => x.ResourceAssets.Select(y => y.ResourceBudgetId)).ToList());
+
             int recordingValue = 0;
 
             foreach (var asset in assets)
             {
                 RecordedAsset recordedAsset = MapRecordedAssetCreate(asset);
-                var oldAsset = await _fixedAssetRepository.FindByCodeAsync(asset.RecordedAssetCode)
-                    ?? throw new Exception(string.Format(Domain.Resources.FixedAsset.FixedAsset.FixedAssetCodeNotExist, asset.RecordedAssetCode));
+                var oldAsset = listFixedAsset.Where(x => x.FixedAssetCode == asset.RecordedAssetCode).FirstOrDefault();
                 recordedAsset.DepartmentName = oldAsset.DepartmentName;
                 recordedAsset.RecordedAssetName = oldAsset.FixedAssetName;
                 recordedAsset.DepreciationRate = oldAsset.DepreciationRate;
                 int recoredAssetValue = 0;
                 var listResourceAsset = new List<ResourceAsset>();
-                foreach (var resource in asset.ResourceAssets)
+                if (asset.ResourceAssets != null && asset.ResourceAssets.Count > 0)
                 {
-                    recoredAssetValue += resource.Cost;
-                    var resourceAsset = new ResourceAsset
+                    foreach (var resource in asset.ResourceAssets)
                     {
-                        Cost = resource.Cost
-                    };
-                    var resourceBudget = await _resourceBudgetRepository.GetAsync(resource.ResourceBudgetId)
-                        ?? throw new Exception(string.Format(Domain.Resources.RecordingAsset.RecordingAsset.ResourceBudgetNotExist, resource.ResourceBudgetId));
-                    resourceAsset.ResourceBudget = resourceBudget;
-                    listResourceAsset.Add(resourceAsset);
-                }
-                if (recoredAssetValue < oldAsset.Cost)
-                {
-                    throw new BadRequestException(string.Format(Domain.Resources.RecordingAsset.RecordingAsset.ResourceBudgetValueNotEnough, asset.RecordedAssetCode));
+                        recoredAssetValue += resource.Cost;
+                        var resourceAsset = new ResourceAsset
+                        {
+                            Cost = resource.Cost
+                        };
+                        var resourceBudget = listResourceBudget.Where(x => x.ResourceBudgetId == resource.ResourceBudgetId).FirstOrDefault();
+                        resourceAsset.ResourceBudget = resourceBudget;
+                        listResourceAsset.Add(resourceAsset);
+                    }
+                    recordedAsset.Value = recoredAssetValue;
                 }
                 else
                 {
-                    recordedAsset.Value = recoredAssetValue;
-                    recordingValue += recoredAssetValue;
+                    recordedAsset.Value = (int)oldAsset.Cost;
                 }
+                recordingValue += (int)recordedAsset.Value;
+
                 recordedAsset.ResourceAssets = listResourceAsset;
                 listRecordedAsset.Add(recordedAsset);
             }
@@ -157,16 +163,6 @@ namespace MISA.Web062023.AMIS.Application
             return recordingDto;
         }
 
-        public Task<int> InsertRecordingAsset(Guid recordingId, List<Guid> ids)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> UpdateRecordingAsync(Guid recordingId, List<Guid> listAssetIdsAfterChange)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// The update recording async.
         /// </summary>
@@ -176,67 +172,22 @@ namespace MISA.Web062023.AMIS.Application
         /// Created by: NTLam (19/8/2023)
         public async Task<bool> UpdateRecordingAsync(Guid id, RecordingUpdateDto recordingUpdateDto)
         {
-            var recording = await GetRecordingAsync(id);
-            var listCodeDelete = recording.Assets.Where(x => !recordingUpdateDto.ListDelete.Contains(x.RecordedAssetId)).Select(x => x.RecordedAssetCode).ToList();
-            var listCodesAfterDelete = recording.Assets.Select(x => x.RecordedAssetCode).Where(x => !listCodeDelete.Contains(x)).ToList();
-            var listCodeCreate = recordingUpdateDto.ListCreate.Select(x => x.RecordedAssetCode);
+            var recording = await _recordingRepository.GetAsync(id);
+            var recordedAssets = await _recordingAssetsRepository.GetRecordingAssetsAsync(id);
 
-            var listRecordedAsset = new List<RecordedAsset>();
-            int recordingValue = 0;
-
-            foreach (var asset in recordingUpdateDto.ListCreate)
+            if(recording.RecordingCode != recordingUpdateDto.RecordingCode)
             {
-                RecordedAsset recordedAsset = MapRecordedAssetCreate(asset);
-                var oldAsset = await _fixedAssetRepository.FindByCodeAsync(asset.RecordedAssetCode)
-                    ?? throw new Exception(string.Format(Domain.Resources.FixedAsset.FixedAsset.FixedAssetCodeNotExist, asset.RecordedAssetCode));
-                recordedAsset.DepartmentName = oldAsset.DepartmentName;
-                recordedAsset.RecordedAssetName = oldAsset.FixedAssetName;
-                recordedAsset.DepreciationRate = oldAsset.DepreciationRate;
-                int recoredAssetValue = 0;
-                var listResourceAsset = new List<ResourceAsset>();
-                foreach (var resource in asset.ResourceAssets)
-                {
-                    recoredAssetValue += resource.Cost;
-                    var resourceAsset = new ResourceAsset
-                    {
-                        Cost = resource.Cost
-                    };
-                    var resourceBudget = await _resourceBudgetRepository.GetAsync(resource.ResourceBudgetId)
-                        ?? throw new Exception(string.Format(Domain.Resources.RecordingAsset.RecordingAsset.ResourceBudgetNotExist, resource.ResourceBudgetId));
-                    resourceAsset.ResourceBudget = resourceBudget;
-                    listResourceAsset.Add(resourceAsset);
-                }
-                if (recoredAssetValue < oldAsset.Cost)
-                {
-                    throw new BadRequestException(string.Format(Domain.Resources.RecordingAsset.RecordingAsset.ResourceBudgetValueNotEnough, asset.RecordedAssetCode));
-                }
-                else
-                {
-                    recordedAsset.Value = recoredAssetValue;
-                    recordingValue += recoredAssetValue;
-                }
-                recordedAsset.ResourceAssets = listResourceAsset;
-                listRecordedAsset.Add(recordedAsset);
+                await _recordingManager.CheckDuplicateCodeAsync(recordingUpdateDto.RecordingCode);
+                recording.RecordingCode = recordingUpdateDto.RecordingCode;
             }
 
-            var listDuplicate = listCodeCreate.Intersect(listCodesAfterDelete).ToList();
-            if (listDuplicate.Count > 0)
-            {
-                throw new BadRequestException(string.Format(Domain.Resources.RecordingAsset.RecordingAsset.DuplicateRecordedAssetCode, string.Join(",", listDuplicate), id));
-            }
+            recording.RecordingDate = recordingUpdateDto.RecordingDate;
+            recording.ActionDate = recordingUpdateDto.ActionDate;
+            recording.Description = recordingUpdateDto.Description;
 
-            var resultDelete = await _recordedAssetRepository.DeleteMultiAsync(recordingUpdateDto.ListDelete);
-            var resultUpdate = await _recordedAssetRepository.UpdateMultipleAsync(id, recordingUpdateDto.ListUpdate);
-            var resultInsert = await _recordedAssetRepository.InsertMultipleAsync(id, listRecordedAsset);
+            var result = await _recordingAssetsRepository.UpdateRecordingAssetsAsync(recording, recordedAssets, recordingUpdateDto.Assets);
 
-            if (resultDelete > 0 && resultUpdate > 0 && resultInsert > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return result;
 
         }
     }

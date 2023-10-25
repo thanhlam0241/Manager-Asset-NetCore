@@ -37,7 +37,7 @@ namespace MISA.Web062023.AMIS.Domain
         /// <param name="assets">The assets.</param>
         /// <returns>The result.</returns>
         /// Created by: NTLam (19/8/2023)
-        public Task<bool> UpdateRecordingAssetsAsync(Guid recordingId, List<RecordedAsset> assets);
+        public Task<bool> UpdateRecordingAssetsAsync(Recording recording, List<RecordedAsset> oldAssets, List<RecordedAsset> newAssets);
 
         /// <summary>
         /// The delete recording assets async.

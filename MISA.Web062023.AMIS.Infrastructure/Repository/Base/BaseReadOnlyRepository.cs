@@ -76,6 +76,22 @@ namespace MISA.Web062023.AMIS.Infrastructure
         }
 
         /// <summary>
+        /// The get list entities by list code.
+        /// </summary>
+        /// <param name="codes">The codes.</param>
+        /// <returns>The result.</returns>
+        /// Created by: NTLam (17/08/2023)
+        public async Task<IEnumerable<TEntity>> GetListEntitiesByListCode(List<string> codes)
+        {
+            var sql = $"SELECT * FROM {TableName} WHERE {TableName}_code IN @Code;";
+            var param = new DynamicParameters();
+            param.Add("@Code", codes);
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
+            var results = await _unitOfWork.Connection.QueryAsync<TEntity>(sql, param, _unitOfWork.Transaction);
+            return results;
+        }
+
+        /// <summary>
         /// The get paging async.
         /// </summary>
         /// <param name="limit">The limit.</param>
